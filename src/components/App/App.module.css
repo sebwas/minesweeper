@@ -13,3 +13,10 @@
   position: relative;
   z-index: 1;
 }
+
+.ribbon {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+}
