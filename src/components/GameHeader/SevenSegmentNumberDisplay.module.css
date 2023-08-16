@@ -1,0 +1,42 @@
+.display {
+	display: flex;
+
+	border: 2px inset rgb(239, 239, 239);
+}
+
+.char {
+	flex: 1;
+
+	display: flex;
+	justify-content: end;
+	align-items: center;
+
+	text-align: right;
+	line-height: 1;
+
+	background-color: #190107;
+	color: #a3012c;
+
+	padding: 0.125rem;
+
+	position: relative;
+
+	width: 0.5em;
+	box-sizing: content-box;
+}
+
+.char::after {
+	position: absolute;
+	inset: 0;
+	content: '0';
+	opacity: 0.25;
+
+	padding: 0.125rem;
+
+	display: flex;
+	justify-content: end;
+	align-items: center;
+
+	text-align: right;
+	line-height: 1;
+}

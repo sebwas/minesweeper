@@ -1,0 +1,41 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<metadata></metadata>
+<defs>
+<font id="seven_segmentregular" horiz-adv-x="1028" >
+<font-face units-per-em="2048" ascent="1638" descent="-410" />
+<missing-glyph horiz-adv-x="614" />
+<glyph horiz-adv-x="0" />
+<glyph horiz-adv-x="0" />
+<glyph unicode="&#xd;" horiz-adv-x="983" />
+<glyph unicode="&#xa;" horiz-adv-x="983" />
+<glyph unicode=" "  horiz-adv-x="614" />
+<glyph unicode="&#x09;" horiz-adv-x="614" />
+<glyph unicode="&#xa0;" horiz-adv-x="614" />
+<glyph unicode="0" d="M123 163v456l65 65l65 -65v-456l-65 -65zM123 815v456l65 65l65 -65v-456l-65 -65zM221 65l65 66h456l65 -66l-65 -65h-456zM221 1369l65 65h456l65 -65l-65 -65h-456zM775 163v456l65 65l65 -65v-456l-65 -65zM775 815v456l65 65l65 -65v-456l-65 -65z" />
+<glyph unicode="1" horiz-adv-x="376" d="M123 65v562l65 66l65 -66v-562l-65 -65zM123 823v547l65 66l65 -66v-547l-65 -65z" />
+<glyph unicode="2" d="M123 163v456l65 65l65 -65v-456l-65 -65zM221 65l65 66h456l65 -66l-65 -65h-456zM221 717l65 65h456l65 -65l-65 -65h-456zM221 1369l65 65h456l65 -65l-65 -65h-456zM775 815v456l65 65l65 -65v-456l-65 -65z" />
+<glyph unicode="3" horiz-adv-x="931" d="M123 65l65 66h456l65 -66l-65 -65h-456zM123 717l65 65h456l65 -65l-65 -65h-456zM123 1369l65 65h456l65 -65l-65 -65h-456zM677 163v456l65 65l65 -65v-456l-65 -65zM677 815v456l65 65l65 -65v-456l-65 -65z" />
+<glyph unicode="4" d="M123 815v555l65 65l65 -65v-555l-65 -65zM221 717l65 65h456l65 -65l-65 -65h-456zM775 64v555l65 65l65 -65v-555l-65 -65zM775 815v555l65 65l65 -65v-555l-65 -65z" />
+<glyph unicode="5" d="M123 815v456l65 65l65 -65v-456l-65 -65zM221 65l65 66h456l65 -66l-65 -65h-456zM221 717l65 65h456l65 -65l-65 -65h-456zM221 1369l65 65h456l65 -65l-65 -65h-456zM775 163v456l65 65l65 -65v-456l-65 -65z" />
+<glyph unicode="6" d="M123 163v456l65 65l65 -65v-456l-65 -65zM123 815v456l65 65l65 -65v-456l-65 -65zM221 65l65 66h456l65 -66l-65 -65h-456zM221 717l65 65h456l65 -65l-65 -65h-456zM221 1369l65 65h456l65 -65l-65 -65h-456zM775 163v456l65 65l65 -65v-456l-65 -65z" />
+<glyph unicode="7" horiz-adv-x="931" d="M123 1369l65 65h456l65 -65l-65 -65h-456zM677 64v555l65 65l65 -65v-555l-65 -65zM677 815v456l65 65l65 -65v-456l-65 -65z" />
+<glyph unicode="8" d="M123 163v456l65 65l65 -65v-456l-65 -65zM123 815v456l65 65l65 -65v-456l-65 -65zM221 65l65 66h456l65 -66l-65 -65h-456zM221 717l65 65h456l65 -65l-65 -65h-456zM221 1369l65 65h456l65 -65l-65 -65h-456zM775 163v456l65 65l65 -65v-456l-65 -65zM775 815v456 l65 65l65 -65v-456l-65 -65z" />
+<glyph unicode="9" d="M123 815v456l65 65l65 -65v-456l-65 -65zM221 65l65 66h456l65 -66l-65 -65h-456zM221 717l65 65h456l65 -65l-65 -65h-456zM221 1369l65 65h456l65 -65l-65 -65h-456zM775 163v456l65 65l65 -65v-456l-65 -65zM775 815v456l65 65l65 -65v-456l-65 -65z" />
+<glyph unicode="&#x2000;" horiz-adv-x="718" />
+<glyph unicode="&#x2001;" horiz-adv-x="1436" />
+<glyph unicode="&#x2002;" horiz-adv-x="718" />
+<glyph unicode="&#x2003;" horiz-adv-x="1436" />
+<glyph unicode="&#x2004;" horiz-adv-x="478" />
+<glyph unicode="&#x2005;" horiz-adv-x="359" />
+<glyph unicode="&#x2006;" horiz-adv-x="239" />
+<glyph unicode="&#x2007;" horiz-adv-x="239" />
+<glyph unicode="&#x2008;" horiz-adv-x="179" />
+<glyph unicode="&#x2009;" horiz-adv-x="287" />
+<glyph unicode="&#x200a;" horiz-adv-x="79" />
+<glyph unicode="&#x202f;" horiz-adv-x="287" />
+<glyph unicode="&#x205f;" horiz-adv-x="359" />
+<glyph unicode="&#x25fc;" horiz-adv-x="1435" d="M0 0v1435h1435v-1435h-1435z" />
+</font>
+</defs></svg> 

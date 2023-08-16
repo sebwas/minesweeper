@@ -1,0 +1,37 @@
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+	gap: 1rem;
+
+	font-size: 2.5rem;
+
+	background-color: rgb(193, 199, 200);
+	padding: 0.5rem;
+	border: 3px inset rgb(239, 239, 239);
+}
+
+.button {
+	border: 3px outset rgb(239, 239, 239);
+	border-radius: 0;
+
+	flex-shrink: 0;
+	flex-grow: 1;
+	height: 100%;
+	max-width: 2.5rem;
+	aspect-ratio: 1;
+
+	padding: 0.25rem;
+	margin: 0.25rem;
+
+	display: flex;
+	place-items: center;
+
+	position: relative;
+}
+
+.button img {
+	aspect-ratio: 1;
+	width: 100%;
+	height: auto;
+}

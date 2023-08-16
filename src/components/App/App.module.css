@@ -1,0 +1,15 @@
+.app {
+  display: inline-flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-direction: column;
+
+  user-select: none;
+
+  margin: 0 auto;
+
+  border: 4px outset rgb(239, 239, 239);
+
+  position: relative;
+  z-index: 1;
+}

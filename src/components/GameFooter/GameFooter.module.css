@@ -1,0 +1,38 @@
+.footer {
+	background-color: rgb(193, 199, 200);
+	color: #242424;
+
+	font-weight: 500;
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	justify-content: center;
+
+	border: 3px inset rgb(239, 239, 239);
+
+	padding: 0.25rem;
+}
+
+.footer[disabled] * {
+	opacity: 0.3;
+}
+
+.footer select {
+	border: 2px inset rgb(239, 239, 239);
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	text-align: right;
+
+	background-color: rgba(255, 255, 255, 0.15);
+
+	padding: 0.125rem;
+	padding-right: 0.5rem;
+	border-radius: 0.0625rem;
+
+	position: relative;
+}

@@ -1,0 +1,83 @@
+:root {
+	--field-length: clamp(20px, 1fr, 30px);
+	--field-border: 4px;
+}
+
+.grid {
+	display: grid;
+	grid-template-rows: repeat(var(--row-count), var(--field-length));
+	grid-template-columns: repeat(var(--column-count), 27px);
+
+	border: 5px inset rgb(239, 239, 239);
+}
+
+.field {
+	width: var(--field-length);
+	height: auto;
+	aspect-ratio: 1 / 1;
+	border: var(--field-border) outset;
+
+	box-sizing: border-box;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	padding: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+.field.uncovered {
+	font-weight: 900;
+	font-size: calc(var(--field-length) - 8px);
+	line-height: 1;
+	font-family: sans-serif;
+	border: 1px solid silver;
+
+	margin-left: -1px;
+	margin-top: -1px;
+
+	background-color: rgb(248, 248, 248);
+}
+
+.field.mined.flagged {
+	color: green;
+}
+
+.field.unmined.flagged {
+	color: red;
+}
+
+.field.uncovered.count-1 {
+	color: rgba(0, 0, 245);
+}
+
+.field.uncovered.count-2 {
+	color: rgba(75, 165, 95);
+}
+
+.field.uncovered.count-3 {
+	color: rgba(234, 51, 35);
+}
+
+.field.uncovered.count-4 {
+	color: rgba(0, 0, 161);
+}
+
+.field.uncovered.count-5 {
+	color: rgba(154, 30, 86);
+}
+
+.field.uncovered.count-6 {
+	color: rgba(55, 126, 126);
+}
+
+.field.uncovered.count-7 {
+	color: rgba(0, 0, 0);
+}
+
+.field.uncovered.count-8 {
+	color: rgba(128, 128, 128);
+}
+
