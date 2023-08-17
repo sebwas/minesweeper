@@ -25,6 +25,8 @@ export type GameProvider = {
 
 const GameContext = React.createContext<GameProvider>(null as unknown as GameProvider)
 
+const SAVED_DIFFICULTY_STORAGE_KEY = 'minesweeper-difficulty'
+
 export default function GameProvider({ children, playfieldRef }: PropsWithChildren<{ playfieldRef: React.RefObject<HTMLDivElement> }>) {
 	function initializeEmptyGrids(dimensions: GridDimensions) {
 		return {
@@ -35,7 +37,21 @@ export default function GameProvider({ children, playfieldRef }: PropsWithChildr
 		}
 	}
 
-	const [difficulty, setDifficulty] = React.useState<keyof typeof DIFFICULTIES>('beginner')
+	const [difficulty, setDifficulty] = React.useState<keyof typeof DIFFICULTIES>(
+		() => {
+			const savedDifficulty = localStorage.getItem(SAVED_DIFFICULTY_STORAGE_KEY)
+
+			if (!savedDifficulty || !Object.keys(DIFFICULTIES).includes(savedDifficulty)) {
+				return Object.keys(DIFFICULTIES)[0] as PresetDifficulties
+			}
+
+			return savedDifficulty as PresetDifficulties
+		}
+	)
+
+	React.useEffect(() => {
+		localStorage.setItem(SAVED_DIFFICULTY_STORAGE_KEY, difficulty)
+	}, [difficulty])
 
 	const [grids, setGrids] = React.useState(
 		() => initializeEmptyGrids(DIFFICULTIES[difficulty].dimensions)
