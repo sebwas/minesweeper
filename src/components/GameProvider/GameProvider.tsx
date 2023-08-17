@@ -27,7 +27,12 @@ const GameContext = React.createContext<GameProvider>(null as unknown as GamePro
 
 const SAVED_DIFFICULTY_STORAGE_KEY = 'minesweeper-difficulty'
 
-export default function GameProvider({ children, playfieldRef }: PropsWithChildren<{ playfieldRef: React.RefObject<HTMLDivElement> }>) {
+export default function GameProvider(
+	{
+		children,
+		playfieldRef
+	}: PropsWithChildren<{ playfieldRef: React.RefObject<HTMLDivElement> }>
+) {
 	function initializeEmptyGrids(dimensions: GridDimensions) {
 		return {
 			mine: createEmptyGrid<0 | 1>(dimensions),
