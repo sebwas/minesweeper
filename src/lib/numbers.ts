@@ -10,6 +10,6 @@ export function min0(value: number) {
 	return Math.max(0, value)
 }
 
-export function max(value: number, lessThan: number) {
-	return Math.min(lessThan, value)
+export function limit(value: number, maximum: number) {
+	return Math.min(maximum, value)
 }

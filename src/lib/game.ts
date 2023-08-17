@@ -1,4 +1,4 @@
-import { between, max, min0 } from "./numbers"
+import { between, limit, min0 } from "./numbers"
 
 type GameGrids = {
     mine: MineGrid<0 | 1>;
@@ -25,8 +25,8 @@ function updateSurroundingMineCounts(
 ) {
 	const [height, width] = [grid.length, grid[0]?.length || 0]
 
-	const [fromX, toX] = [min0(coordinates.x - 1), max(coordinates.x + 1, width - 1)]
-	const [fromY, toY] = [min0(coordinates.y - 1), max(coordinates.y + 1, height - 1)]
+	const [fromX, toX] = [min0(coordinates.x - 1), limit(coordinates.x + 1, width - 1)]
+	const [fromY, toY] = [min0(coordinates.y - 1), limit(coordinates.y + 1, height - 1)]
 
 	for (let y = fromY; y <= toY; y++) {
 		for (let x = fromX; x <= toX; x++) {
@@ -49,11 +49,11 @@ function isInSparePerimeter(
 	return between(
 		y,
 		min0(spareField.y - sparePerimeter),
-		max(spareField.y + sparePerimeter, dimensions.height)
+		limit(spareField.y + sparePerimeter, dimensions.height)
 	) && between(
 		x,
 		min0(spareField.x - sparePerimeter),
-		max(spareField.x + sparePerimeter, dimensions.width)
+		limit(spareField.x + sparePerimeter, dimensions.width)
 	)
 }
 
