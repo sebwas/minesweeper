@@ -36,13 +36,13 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 			const initialLocations = [
 				{
 					startLocation: new Vector(playfieldRect.x, playfieldRect.y),
-					startLocationRandomizer: (v: Vector) => v.add(new Vector(-50 * Math.random(), -50 * Math.random())),
+					startLocationRandomizer: (v: Vector) => v.add(new Vector(-10 * Math.random(), -10 * Math.random())),
 					angle: () => Math.random() * 90 + 135
 				},
 
 				{
 					startLocation: new Vector(playfieldRect.x + playfieldRect.width, playfieldRect.y),
-					startLocationRandomizer: (v: Vector) => v.add(new Vector(+ 50 * Math.random(), -50 * Math.random())),
+					startLocationRandomizer: (v: Vector) => v.add(new Vector(10 * Math.random(), -10 * Math.random())),
 					angle: () => Math.random() * 90 - 45
 				},
 			]
