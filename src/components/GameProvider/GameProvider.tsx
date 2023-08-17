@@ -4,6 +4,7 @@ import { createEmptyGrid, createGameGrids, handleClick } from '../../lib/game'
 
 import { DIFFICULTIES } from '../../lib/settings'
 import { reduceToSum } from '../../lib/arrays'
+import { useFireworks } from '../Fireworks'
 
 export enum GameStatus { idle, running, lose, win }
 
@@ -24,7 +25,7 @@ export type GameProvider = {
 
 const GameContext = React.createContext<GameProvider>(null as unknown as GameProvider)
 
-export default function GameProvider({ children }: PropsWithChildren) {
+export default function GameProvider({ children, playfieldRef }: PropsWithChildren<{ playfieldRef: React.RefObject<HTMLDivElement> }>) {
 	function initializeEmptyGrids(dimensions: GridDimensions) {
 		return {
 			mine: createEmptyGrid<0 | 1>(dimensions),
@@ -66,6 +67,16 @@ export default function GameProvider({ children }: PropsWithChildren) {
 
 		setGrids(initializeEmptyGrids(DIFFICULTIES[difficulty].dimensions))
 	}, [status, difficulty])
+
+	const { startFireworks } = useFireworks()
+
+	React.useEffect(() => {
+		if (status === GameStatus.win) {
+			startFireworks({
+				playfield: playfieldRef.current as HTMLDivElement
+			})
+		}
+	}, [status, playfieldRef, startFireworks])
 
 	function handleGridClick(clickCoordinates: Coordinates, isRightClick = false) {
 		const { x, y } = clickCoordinates

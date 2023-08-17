@@ -1,20 +1,27 @@
+import React from 'react'
+
 import GameProvider from "../GameProvider"
 import GameHeader from "../GameHeader"
 import GameGrid from "../GameGrid"
 import GameFooter from '../GameFooter'
+import FireworksProvider from "../Fireworks"
 
 import styles from './App.module.css'
 
 function App() {
+	const playfieldRef = React.useRef<HTMLDivElement>(null)
+
 	return (
 		<>
-			<GameProvider>
-				<div className={styles.app}>
-					<GameHeader />
-					<GameGrid />
-					<GameFooter />
-				</div>
-			</GameProvider>
+			<FireworksProvider>
+				<GameProvider playfieldRef={playfieldRef}>
+					<div className={styles.app} ref={playfieldRef}>
+						<GameHeader />
+						<GameGrid />
+						<GameFooter />
+					</div>
+				</GameProvider>
+			</FireworksProvider>
 
 			<a
 				className={styles.ribbon}
