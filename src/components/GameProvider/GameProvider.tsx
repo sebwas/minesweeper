@@ -92,11 +92,11 @@ export default function GameProvider(
 	const { startFireworks } = useFireworks()
 
 	React.useEffect(() => {
-		if (status === GameStatus.win) {
+		// if (status === GameStatus.win) {
 			startFireworks({
 				playfield: playfieldRef.current as HTMLDivElement
 			})
-		}
+		// }
 	}, [status, playfieldRef, startFireworks])
 
 	function handleGridClick(clickCoordinates: Coordinates, isRightClick = false) {

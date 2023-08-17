@@ -45,11 +45,11 @@ export default class FireworkParticleSystem extends ParticleSystem {
 		}
 
 		const angleDeviation = 10 + 10 * Math.random()
-		const velocityOne = Vector.fromDegreesAngle(this.angleInDegrees + angleDeviation)
-		const velocityTwo = Vector.fromDegreesAngle(this.angleInDegrees - angleDeviation)
+		const velocityOne = Vector.fromDegreesAngle(this.angleInDegrees + angleDeviation).setMagnitude(1 + 2 * Math.random())
+		const velocityTwo = Vector.fromDegreesAngle(this.angleInDegrees - angleDeviation).setMagnitude(1 + 2 * Math.random())
 
 		// Add two to make it symmetrical.
-		super.addParticle(new FireworkParticle(this.location.get(), velocityOne, new Vector(0.002, 0.002), this.lifespan, this.lifespanDecrease))
-		super.addParticle(new FireworkParticle(this.location.get(), velocityTwo, new Vector(0.002, 0.002), this.lifespan, this.lifespanDecrease))
+		super.addParticle(new FireworkParticle(this.location.get(), velocityOne, new Vector(0.004 * Math.random() - 0.002, 0.004 * Math.random() - 0.002), this.lifespan, this.lifespanDecrease))
+		super.addParticle(new FireworkParticle(this.location.get(), velocityTwo, new Vector(0.004 * Math.random() - 0.002, 0.004 * Math.random() - 0.002), this.lifespan, this.lifespanDecrease))
 	}
 }

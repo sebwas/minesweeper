@@ -37,11 +37,13 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 				{
 					startLocation: new Vector(playfieldRect.x, playfieldRect.y),
 					startLocationRandomizer: (v: Vector) => v.add(new Vector(-50 * Math.random(), -50 * Math.random())),
+					angle: () => Math.random() * 90 + 135
 				},
 
 				{
 					startLocation: new Vector(playfieldRect.x + playfieldRect.width, playfieldRect.y),
 					startLocationRandomizer: (v: Vector) => v.add(new Vector(+ 50 * Math.random(), -50 * Math.random())),
+					angle: () => Math.random() * 90 - 45
 				},
 			]
 
@@ -60,7 +62,8 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 					addFireworks(
 						initialLocations[initial].startLocationRandomizer(
 							initialLocations[initial].startLocation
-						)
+						),
+						initialLocations[initial].angle()
 					)
 				)
 			}
@@ -87,14 +90,12 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 		[canvas]
 	)
 
-	function addFireworks({x, y}: {x: number, y: number}, fireworkParticleCount = 5 + 5 * Math.random()) {
-		const angle = Math.random() * 180
-
+	function addFireworks({x, y}: {x: number, y: number}, angle: number, fireworkParticleCount = 5 + 5 * Math.random()) {
 		const ps = new FireworkParticleSystem(
 			new Vector(x, y),
 			angle,
 			hslToRgb(Math.round(Math.random() * 255), 100, 50),
-			120 + Math.random() * 120,
+			90 + Math.random() * 60,
 			1 + Math.random()
 		)
 
