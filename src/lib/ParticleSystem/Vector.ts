@@ -18,7 +18,7 @@ export default class Vector {
 	}
 
 	get heading() {
-		return Math.atan2(this.x, this.y)
+		return Math.atan2(this.y, this.x)
 	}
 
 	get angle() {
@@ -26,7 +26,7 @@ export default class Vector {
 	}
 
 	get angleInDegrees() {
-		return this.angle * Math.PI / 180
+		return this.angle * 180 / Math.PI
 	}
 
 	public get() {
@@ -69,10 +69,12 @@ export default class Vector {
 		if (this.magnitude > magnitude) {
 			return this.normalize().mult(magnitude)
 		}
+
+		return this
 	}
 
 	public rotate(angle: number) {
-		return Vector.fromDegreesAngle(this.angleInDegrees + angle)
+		return Vector.fromDegreesAngle(this.angleInDegrees - angle)
 	}
 
 	public dot(v: Vector) {
@@ -84,10 +86,14 @@ export default class Vector {
 	}
 
 	public angleTo(v: Vector) {
-		const dot = this.dot(v);
-		const theta = Math.acos(dot / (this.magnitude * v.magnitude));
+		const dot = this.dot(v)
+		const theta = Math.acos(dot / (this.magnitude * v.magnitude))
 
-		return theta;
+		return theta
+	}
+
+	public angleToInDegrees(v: Vector) {
+		return this.angleTo(v) * 180 / Math.PI
 	}
 
 	public static fromRadiansAngle(a: number) {
@@ -95,6 +101,10 @@ export default class Vector {
 	}
 
 	public static fromDegreesAngle(a: number) {
-		return Vector.fromRadiansAngle(a * 180 / Math.PI)
+		return Vector.fromRadiansAngle(a * Math.PI / 180)
+	}
+
+	public static fromSimpleObject({ x, y }: { x: number, y: number }) {
+		return new Vector(x, y)
 	}
 }
