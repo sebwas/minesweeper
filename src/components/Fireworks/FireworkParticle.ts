@@ -1,6 +1,6 @@
 import { Particle } from "../../lib/ParticleSystem"
 
-import type { ParticleConstructorArgs } from "../../lib/ParticleSystem/Particle"
+import type { ParticleConstructorArgs } from "../../lib/ParticleSystem"
 import type { Color } from "./FireworkParticleSystem"
 
 export default class FireworkParticle extends Particle {
