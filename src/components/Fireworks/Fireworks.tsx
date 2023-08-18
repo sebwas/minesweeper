@@ -79,9 +79,6 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 
 				if (!ps.isEndOfLife()) {
 					requestAnimationFrame(run)
-				} else {
-					// Run one last time to run the EOL handlers.
-					ps.run(ctx)
 				}
 			}
 

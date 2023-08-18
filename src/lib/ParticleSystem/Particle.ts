@@ -51,7 +51,13 @@ export default abstract class Particle {
 	}
 
 	isEndOfLife() {
-		return this._lifespan < 0
+		const isEndOfLife = (this.lifespan < 0)
+
+		if (isEndOfLife) {
+			this.handleEndOfLife()
+		}
+
+		return isEndOfLife
 	}
 
 	run(ctx: CanvasRenderingContext2D) {
@@ -61,8 +67,6 @@ export default abstract class Particle {
 
 	update() {
 		if (this.isEndOfLife()) {
-			this.handleEndOfLife()
-
 			return
 		}
 
