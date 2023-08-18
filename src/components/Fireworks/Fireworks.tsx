@@ -7,7 +7,15 @@ import { hslToRgb } from '../../lib/colors'
 import styles from './Fireworks.module.css'
 
 type FireworksContextApi = {
-	startFireworks: ({ playfield, fireworkCount}: { playfield: HTMLDivElement, fireworkCount?: number }) => void
+	startFireworks({
+		playfield,
+		fireworkCount,
+		additionalRounds
+	}: {
+		playfield: HTMLDivElement,
+		fireworkCount?: number,
+		additionalRounds?: number
+	}): void
 }
 
 const FireworksContext = React.createContext<FireworksContextApi>({} as FireworksContextApi)
@@ -72,6 +80,8 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 				)
 			}
 
+			// After the fireworks are done, launch a new set until we run out
+			// of additional rounds to be fired.
 			if (additionalRounds) {
 				ps.addEndOfLifeHandler(
 					() => startFireworks({ playfield, fireworkCount, additionalRounds: additionalRounds - 1 })
@@ -120,25 +130,30 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 	)
 }
 
-const Fireworks = React.forwardRef<HTMLCanvasElement>((_, canvas) => {
-	const [screenDimensions, setScreenDimensions] = React.useState([window.innerWidth, window.innerHeight])
+const Fireworks = React.forwardRef<HTMLCanvasElement>(
+	function Fireworks(_, canvas) {
+		const [
+			screenDimensions,
+			setScreenDimensions
+		] = React.useState([window.innerWidth, window.innerHeight])
 
-	React.useEffect(() => {
-		function updateDimensions() {
-			setScreenDimensions([window.innerWidth, window.innerHeight])
-		}
+		React.useEffect(() => {
+			function updateDimensions() {
+				setScreenDimensions([window.innerWidth, window.innerHeight])
+			}
 
-		window.addEventListener('resize', updateDimensions)
+			window.addEventListener('resize', updateDimensions)
 
-		return () => window.removeEventListener('resize', updateDimensions)
-	})
+			return () => window.removeEventListener('resize', updateDimensions)
+		})
 
-	return (
-		<canvas
-			ref={canvas}
-			className={styles.canvas}
-			width={screenDimensions[0]}
-			height={screenDimensions[1]}
-		/>
-	)
-})
+		return (
+			<canvas
+				ref={canvas}
+				className={styles.canvas}
+				width={screenDimensions[0]}
+				height={screenDimensions[1]}
+			/>
+		)
+	}
+)
