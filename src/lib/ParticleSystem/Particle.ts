@@ -1,5 +1,13 @@
 import Vector from "./Vector";
 
+export type ParticleConstructorArgs = {
+	location?: Vector
+	velocity?: Vector
+	acceleration?: Vector
+	lifespan?: number
+	lifespanDecrease?: number
+}
+
 export default abstract class Particle {
 	protected _location: Vector
 	protected _velocity: Vector
@@ -17,7 +25,7 @@ export default abstract class Particle {
 		acceleration = new Vector(0, 0),
 		lifespan = 255,
 		lifespanDecrease = 1
-	} = {}) {
+	}: ParticleConstructorArgs = {}) {
 		this._location = location
 		this._velocity = velocity
 		this._acceleration = acceleration
