@@ -23,9 +23,7 @@ export default class ParticleSystem extends Particle {
 			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 		}
 
-		this.particles.forEach(p => {
-			p.draw(ctx)
-		})
+		this.particles.forEach(p => p.draw(ctx))
 	}
 
 	public setIsRootPs(isRootPs = true) {
