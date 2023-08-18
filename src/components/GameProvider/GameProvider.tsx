@@ -8,7 +8,7 @@ import { useFireworks } from '../Fireworks'
 
 export enum GameStatus { idle, running, lose, win }
 
-export type GameProvider = {
+type ProvidedContext = {
 	totalMines: number
 	flaggedMineCount: number
 	timeElapsed: number
@@ -23,8 +23,16 @@ export type GameProvider = {
 	restart: () => void
 }
 
-const GameContext = React.createContext<GameProvider>(null as unknown as GameProvider)
+const GameContext = React.createContext<ProvidedContext>(null as unknown as ProvidedContext)
 
+/**
+ * Use the game API anywhere in the application.
+ */
+export function useGameState() {
+	return React.useContext(GameContext) as ProvidedContext
+}
+
+// The local storage key to save and retrieve the difficulty the player set.
 const SAVED_DIFFICULTY_STORAGE_KEY = 'minesweeper-difficulty'
 
 export default function GameProvider(
@@ -33,6 +41,12 @@ export default function GameProvider(
 		playfieldRef
 	}: PropsWithChildren<{ playfieldRef: React.RefObject<HTMLDivElement> }>
 ) {
+	/**
+	 * Initialize and return an empty set of grids that can be used to render
+	 * the playfield while the game is idle.
+	 *
+	 * @param dimensions
+	 */
 	function initializeEmptyGrids(dimensions: GridDimensions) {
 		return {
 			mine: createEmptyGrid<0 | 1>(dimensions),
@@ -54,6 +68,7 @@ export default function GameProvider(
 		}
 	)
 
+	// Save the difficulty in local storage.
 	React.useEffect(() => {
 		localStorage.setItem(SAVED_DIFFICULTY_STORAGE_KEY, difficulty)
 	}, [difficulty])
@@ -62,12 +77,10 @@ export default function GameProvider(
 		() => initializeEmptyGrids(DIFFICULTIES[difficulty].dimensions)
 	)
 
-	const totalMines = reduceToSum(grids.mine.map(reduceToSum))
-	const flaggedMineCount = reduceToSum(grids.flag.map(reduceToSum))
-
-	const [timeElapsed, setTimeElapsed] = React.useState(0)
 	const [status, setStatus] = React.useState(GameStatus.idle)
+	const [timeElapsed, setTimeElapsed] = React.useState(0)
 
+	// When the player starts playing, start the clock.
 	React.useEffect(() => {
 		if (status !== GameStatus.running) {
 			return
@@ -81,6 +94,7 @@ export default function GameProvider(
 		return () => window.clearInterval(timeElapsedUpdaterInterval)
 	}, [status, timeElapsed])
 
+	// When idle, resize the playing field immediately.
 	React.useEffect(() => {
 		if (status !== GameStatus.idle) {
 			return
@@ -91,6 +105,7 @@ export default function GameProvider(
 
 	const { startFireworks } = useFireworks()
 
+	// When the player wins, start the fireworks.
 	React.useEffect(() => {
 		if (status === GameStatus.win) {
 			startFireworks({
@@ -99,6 +114,13 @@ export default function GameProvider(
 		}
 	}, [status, playfieldRef, startFireworks])
 
+	/**
+	 * Handle a click at a given set of coordinates. If the playfield does not
+	 * yet exist, create it.
+	 *
+	 * @param clickCoordinates
+	 * @param isRightClick
+	 */
 	function handleGridClick(clickCoordinates: Coordinates, isRightClick = false) {
 		const { x, y } = clickCoordinates
 
@@ -124,6 +146,9 @@ export default function GameProvider(
 		setStatus(GameStatus.idle)
 	}
 
+	/**
+	 * Start the game by creating the playing field.
+	 */
 	function startGame(firstClickCoordinates: Coordinates) {
 		resetGame()
 		setStatus(GameStatus.running)
@@ -139,6 +164,12 @@ export default function GameProvider(
 		return grid
 	}
 
+	// Two globally provided helper variables regarding the number of mines and
+	// the number of flags.
+	const totalMines = reduceToSum(grids.mine.map(reduceToSum))
+	const flaggedMineCount = reduceToSum(grids.flag.map(reduceToSum))
+
+	// Destructure the grids to have more finegrained control.
 	const { mine, mineCount, flag, cover } = grids
 
 	const exported = {
@@ -165,8 +196,4 @@ export default function GameProvider(
 			{children}
 		</GameContext.Provider>
 	)
-}
-
-export function useGameState() {
-	return React.useContext(GameContext)
 }
