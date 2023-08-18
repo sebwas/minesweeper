@@ -30,5 +30,7 @@ export default class ParticleSystem extends Particle {
 
 	public setIsRootPs(isRootPs = true) {
 		this._isRootPs = isRootPs
+
+		return this
 	}
 }

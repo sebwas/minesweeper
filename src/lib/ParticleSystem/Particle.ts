@@ -11,13 +11,13 @@ export default abstract class Particle {
 
 	private endOfLifeHandlers: Array<(p: Particle) => void> = []
 
-	constructor(
-		location: Vector = new Vector(0, 0),
-		velocity: Vector = new Vector(0, 0),
-		acceleration: Vector | ((normalizedLifespan: number) => Vector) = new Vector(0, 0),
+	constructor({
+		location = new Vector(0, 0),
+		velocity = new Vector(0, 0),
+		acceleration = new Vector(0, 0),
 		lifespan = 255,
 		lifespanDecrease = 1
-	) {
+	} = {}) {
 		this._location = location
 		this._velocity = velocity
 		this._acceleration = acceleration
@@ -48,6 +48,10 @@ export default abstract class Particle {
 
 	get lifespanDecrease() {
 		return this._lifespanDecrease
+	}
+
+	get relativeLifespan() {
+		return this.lifespan / this.fullLifespan
 	}
 
 	isEndOfLife() {
