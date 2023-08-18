@@ -1,5 +1,5 @@
 import { expect, describe, it } from 'vitest'
-import Vector from '../../../src/lib/ParticleSystem/Vector'
+import { Vector } from '../../../src/lib/ParticleSystem'
 
 describe('The Vector class', () => {
 	it('can convert into and from a simple object', () => {
