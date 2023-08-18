@@ -63,7 +63,7 @@ export default abstract class Particle {
 	}
 
 	isEndOfLife() {
-		const isEndOfLife = (this.lifespan < 0)
+		const isEndOfLife = (this.lifespan <= 0)
 
 		if (isEndOfLife) {
 			this.handleEndOfLife()
