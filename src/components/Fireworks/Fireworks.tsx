@@ -33,37 +33,41 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 		) {
 			const playfieldRect = playfield.getBoundingClientRect()
 
+			// These initial locations are on either top corner of the playfield,
+			// which is the whole game container. They are supposed to have a
+			// few pixels of offset from their respective corner and a slightly
+			// randomized angle that goes with the diagonal running through the
+			// corner.
 			const initialLocations = [
 				{
-					startLocation: new Vector(playfieldRect.x, playfieldRect.y),
-					startLocationRandomizer: (v: Vector) => v.add(new Vector(-10 * Math.random(), -10 * Math.random())),
-					angle: () => Math.random() * 90 + 135
+					startLocation: () => new Vector(
+						playfieldRect.x + -20 * Math.random(),
+						playfieldRect.y + -20 * Math.random()
+					),
+					angle: () => (Math.random() * 60 - 30) - 135
 				},
 
 				{
-					startLocation: new Vector(playfieldRect.x + playfieldRect.width, playfieldRect.y),
-					startLocationRandomizer: (v: Vector) => v.add(new Vector(10 * Math.random(), -10 * Math.random())),
-					angle: () => Math.random() * 90 - 45
+					startLocation: () => new Vector(
+						playfieldRect.x + playfieldRect.width + 20 * Math.random(),
+						playfieldRect.y + -20 * Math.random()
+					),
+					angle: () => (Math.random() * 60 - 30) - 45
 				},
 			]
 
 			const ctx = canvas?.current?.getContext('2d') as CanvasRenderingContext2D
 
-			const ps = new ParticleSystem()
-
-			ps.setIsRootPs()
+			const ps = new ParticleSystem().setIsRootPs()
 
 			for (let i = 0; i < fireworkCount; i++) {
-				// Decide whether to take the top left or top right corner as
-				// starting point.
-				const initial = Number(Math.random() >= 0.5)
+				// Take either the top left or top right corner as starting point.
+				const startingPoint = initialLocations[Number(Math.random() >= 0.5)]
 
 				ps.addParticle(
 					addFireworks(
-						initialLocations[initial].startLocationRandomizer(
-							initialLocations[initial].startLocation
-						),
-						initialLocations[initial].angle()
+						startingPoint.startLocation(),
+						startingPoint.angle()
 					)
 				)
 			}
