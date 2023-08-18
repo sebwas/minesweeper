@@ -91,7 +91,11 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 		[canvas]
 	)
 
-	function addFireworks({x, y}: {x: number, y: number}, angle: number, fireworkParticleCount = 5 + 5 * Math.random()) {
+	function addFireworks(
+		{ x, y }: { x: number, y: number },
+		angle: number,
+		fireworkParticleCount = 5 + 5 * Math.random()
+	) {
 		const ps = new FireworkParticleSystem(
 			new Vector(x, y),
 			angle,
