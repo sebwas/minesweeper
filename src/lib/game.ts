@@ -1,7 +1,7 @@
-import GameError from "./errors";
+import GameError, { FieldIsFlaggedField, FieldIsMineField, FieldIsNotCovered } from "./errors";
 import { between, limit, min0 } from "./numbers"
 
-type GameGrids = {
+export type GameGrids = {
     mine: MineGrid<0 | 1>;
     cover: MineGrid<0 | 1>;
     flag: MineGrid<0 | 1>;
@@ -257,7 +257,7 @@ function gridsAreValid(grids: GameGrids) {
 	return null
 }
 
-function copyGrid<T extends number>(grid: MineGrid<T>) {
+export function copyGrid<T extends number>(grid: MineGrid<T>) {
 	return JSON.parse(JSON.stringify(grid)) as typeof grid
 }
 
@@ -302,14 +302,19 @@ export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: 
 	} as GameGrids
 
 	if (isRightClick) {
+		// Only toggle when the field is still covered.
+		if (newGrids.cover[y][x] !== 1) {
+			throw new FieldIsNotCovered()
+		}
+
 		newGrids.flag[y][x] = Number(!newGrids.flag[y][x]) as 0 | 1
 
 	// It's a flagged field, so we want to bail.
 	// The click shouldn't get through, so this is only a failsafe.
 	} else if (newGrids.flag[y][x]) {
-		// It's a flag field.
+		throw new FieldIsFlaggedField()
 	} else if (newGrids.mine[y][x]) {
-		// We exploded.
+		throw new FieldIsMineField()
 	} else if (newGrids.mineCount[y][x] === 0) {
 		newGrids.cover = expandFieldsToUncover(newGrids, { x, y })
 	} else {

@@ -5,6 +5,7 @@ import { createEmptyGrid, createGameGrids, handleClick } from '../../lib/game'
 import { DIFFICULTIES } from '../../lib/settings'
 import { reduceToSum } from '../../lib/arrays'
 import { useFireworks } from '../Fireworks'
+import { FieldIsFlaggedField, FieldIsMineField, FieldIsNotCovered } from '../../lib/errors'
 
 export enum GameStatus { idle, running, lose, win }
 
@@ -119,17 +120,23 @@ export default function GameProvider(
 	 * yet exist, create it.
 	 */
 	function handleGridClick(clickCoordinates: Coordinates, isRightClick = false, skipValidityCheck = false) {
-		const { x, y } = clickCoordinates
-
 		const currentGrids = status === GameStatus.running
 			? grids
 			: startGame(clickCoordinates)
 
-		if (currentGrids.mine[y][x] && !isRightClick) {
-			setStatus(GameStatus.lose)
-		}
+		let newGrids = currentGrids
 
-		const newGrids = handleClick(currentGrids, clickCoordinates, isRightClick, skipValidityCheck)
+		try {
+			newGrids = handleClick(currentGrids, clickCoordinates, isRightClick, skipValidityCheck)
+		} catch (e) {
+			if (e instanceof FieldIsNotCovered || e instanceof FieldIsFlaggedField) {
+				// Ignore; the field will remain the same.
+			}
+
+			if (e instanceof FieldIsMineField) {
+				setStatus(GameStatus.lose)
+			}
+		}
 
 		setGrids(newGrids)
 

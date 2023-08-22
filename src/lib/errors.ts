@@ -13,7 +13,7 @@ export default class GameError extends Error {
 	}
 
 	public static mineCountTooHigh() {
-		return new Error(GameError.mineCountTooHighText)
+		return new GameError(GameError.mineCountTooHighText)
 	}
 
 	public static gridsAreMissing() {
@@ -41,6 +41,12 @@ export default class GameError extends Error {
 	}
 
 	private static gameGridsAreInvalid(reason: string) {
-		return new Error(GameError.gameGridsAreInvalidText(reason))
+		return new GameError(GameError.gameGridsAreInvalidText(reason))
 	}
 }
+
+export class FieldIsNotCovered extends GameError {}
+
+export class FieldIsMineField extends GameError {}
+
+export class FieldIsFlaggedField extends GameError {}
