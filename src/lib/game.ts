@@ -164,14 +164,14 @@ function getListOfFieldsToUncover(
 	toBeUncovered: Set<string> = new Set<string>([`${field.x}-${field.y}`])
 ) {
 	const fieldsToTry = [
-		{...field, x: field.x - 1},
-		{...field, x: field.x + 1},
-		{...field, y: field.y - 1},
-		{...field, y: field.y + 1},
-		{x: field.x - 1, y: field.y - 1},
-		{x: field.x + 1, y: field.y - 1},
-		{x: field.x - 1, y: field.y + 1},
-		{x: field.x + 1, y: field.y + 1},
+		{ ...field, x: field.x - 1 },
+		{ ...field, x: field.x + 1 },
+		{ ...field, y: field.y - 1 },
+		{ ...field, y: field.y + 1 },
+		{ x: field.x - 1, y: field.y - 1 },
+		{ x: field.x + 1, y: field.y - 1 },
+		{ x: field.x - 1, y: field.y + 1 },
+		{ x: field.x + 1, y: field.y + 1 },
 	]
 
 	fieldsToTry.forEach(field => {
@@ -208,7 +208,7 @@ function copyGrid<T extends number>(grid: MineGrid<T>) {
  * Pure function to expand a selection of fields around an empty field (a field that has no neighboring mines.)
  */
 function expandFieldsToUncover(grids: GameGrids, initial: Coordinates) {
-	const {cover: coverGrid, mineCount} = grids
+	const { cover: coverGrid, mineCount } = grids
 
 	const fields = getListOfFieldsToUncover(mineCount, initial)
 
@@ -227,7 +227,7 @@ function expandFieldsToUncover(grids: GameGrids, initial: Coordinates) {
  * Pure function to recalculate the grids after a click at the given coordinates.
  */
 export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: boolean) {
-	const {x, y} = click
+	const { x, y } = click
 
 	const newGrids = {
 		mine: copyGrid(grids.mine),
@@ -246,7 +246,7 @@ export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: 
 	} else if (newGrids.mine[y][x]) {
 		// We exploded.
 	} else if (newGrids.mineCount[y][x] === 0) {
-		newGrids.cover = expandFieldsToUncover(newGrids, {x, y})
+		newGrids.cover = expandFieldsToUncover(newGrids, { x, y })
 	} else {
 		newGrids.cover[y][x] = 0
 	}
