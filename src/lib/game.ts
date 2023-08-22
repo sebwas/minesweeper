@@ -58,11 +58,11 @@ function isInSparePerimeter(
 	)
 }
 
-function hasInvalidCoordinate(coordinates: Coordinates, dimensions: GridDimensions) {
-	return coordinates.x < 0
-		|| coordinates.y < 0
-		|| coordinates.x > (dimensions.width - 1)
-		|| coordinates.y > (dimensions.height - 1)
+function coordinateIsValid(coordinates: Coordinates, dimensions: GridDimensions) {
+	return coordinates.x >= 0
+		&& coordinates.y >= 0
+		&& coordinates.x < dimensions.width
+		&& coordinates.y < dimensions.height
 }
 
 function getSparePerimeterCoordinates(spareField: Coordinates, sparePerimeter: number, dimensions: GridDimensions) {
@@ -72,7 +72,7 @@ function getSparePerimeterCoordinates(spareField: Coordinates, sparePerimeter: n
 		for (let y = spareField.y - sparePerimeter; y <= spareField.y + sparePerimeter; y++) {
 			const field: Coordinates = { x, y }
 
-			if (!hasInvalidCoordinate(field, dimensions)) {
+			if (coordinateIsValid(field, dimensions)) {
 				coordinates.push(field)
 			}
 		}
