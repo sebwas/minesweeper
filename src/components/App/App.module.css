@@ -1,22 +1,58 @@
-.app {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  flex-direction: column;
+.game {
+	display: flex;
+	justify-content: center;
+	align-items: stretch;
+	flex-direction: column;
 
-  user-select: none;
+	user-select: none;
 
-  margin: 0 auto;
+	margin: 0 auto;
 
-  border: 4px outset rgb(239, 239, 239);
+	border: 4px outset rgb(239, 239, 239);
 
-  position: relative;
-  z-index: 1;
+	position: relative;
+	z-index: 1;
 }
 
-.ribbon {
-  position: absolute;
+.github-corner svg {
+	fill:#fff;
+	color:#151513;
 
-  top: 0;
-  right: 0;
+	position: absolute;
+
+	top: 0;
+	border: 0;
+	right: 0;
+}
+
+.github-corner .octo-arm {
+	transform-origin: 130px 106px;
+}
+
+.github-corner:hover .octo-arm {
+	animation: octocat-wave 560ms ease-in-out;
+}
+
+@keyframes octocat-wave {
+	0%, 100% {
+		transform: rotate(0);
+	}
+
+	20%, 60% {
+		transform: rotate(-25deg);
+	}
+
+	40%, 80% {
+		transform: rotate(10deg);
+	}
+}
+
+@media (max-width:500px) {
+	.github-corner:hover .octo-arm{
+		animation: none;
+	}
+
+	.github-corner .octo-arm {
+		animation: octocat-wave 560ms ease-in-out;
+	}
 }
