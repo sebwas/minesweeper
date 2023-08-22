@@ -8,11 +8,9 @@ import styles from './Fireworks.module.css'
 
 type FireworksContextApi = {
 	startFireworks({
-		playfield,
 		fireworkCount,
 		additionalRounds
-	}: {
-		playfield: HTMLDivElement,
+	}?: {
 		fireworkCount?: number,
 		additionalRounds?: number
 	}): void
@@ -24,21 +22,32 @@ export function useFireworks() {
 	return React.useContext(FireworksContext)
 }
 
-export default function FireworksProvider({ children }: PropsWithChildren) {
+export default function FireworksProvider(
+	{
+		children,
+		playfieldRef
+	}: PropsWithChildren<{
+		playfieldRef: React.RefObject<HTMLDivElement>
+	}>
+) {
 	const canvas = React.useRef<HTMLCanvasElement>(null)
 
 	const startFireworks = React.useCallback(
 		function startFireworks(
 			{
-				playfield,
 				fireworkCount = 8,
 				additionalRounds = 2
-			}: {
-				playfield: HTMLDivElement,
+			}: undefined | {
 				fireworkCount?: number,
 				additionalRounds?: number
-			}
+			} = {}
 		) {
+			const playfield = playfieldRef.current
+
+			if (!playfield) {
+				throw new Error('Cannot start fireworks, because the playfield is missing.')
+			}
+
 			const playfieldRect = playfield.getBoundingClientRect()
 
 			// These initial locations are on either top corner of the playfield,
@@ -84,7 +93,7 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 			// of additional rounds to be fired.
 			if (additionalRounds) {
 				ps.addEndOfLifeHandler(
-					() => startFireworks({ playfield, fireworkCount, additionalRounds: additionalRounds - 1 })
+					() => startFireworks({ fireworkCount, additionalRounds: additionalRounds - 1 })
 				)
 			}
 
@@ -98,7 +107,7 @@ export default function FireworksProvider({ children }: PropsWithChildren) {
 
 			run()
 		},
-		[canvas]
+		[canvas, playfieldRef]
 	)
 
 	function addFireworks(
@@ -149,6 +158,7 @@ const Fireworks = React.forwardRef<HTMLCanvasElement>(
 
 		return (
 			<canvas
+				data-testid="canvas"
 				ref={canvas}
 				className={styles.canvas}
 				width={screenDimensions[0]}

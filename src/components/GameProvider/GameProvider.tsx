@@ -36,12 +36,7 @@ export function useGameState() {
 // The local storage key to save and retrieve the difficulty the player set.
 const SAVED_DIFFICULTY_STORAGE_KEY = 'minesweeper-difficulty'
 
-export default function GameProvider(
-	{
-		children,
-		playfieldRef
-	}: PropsWithChildren<{ playfieldRef: React.RefObject<HTMLDivElement> }>
-) {
+export default function GameProvider({ children }: PropsWithChildren) {
 	/**
 	 * Initialize and return an empty set of grids that can be used to render
 	 * the playfield while the game is idle.
@@ -109,11 +104,9 @@ export default function GameProvider(
 	// When the player wins, start the fireworks.
 	React.useEffect(() => {
 		if (status === GameStatus.win) {
-			startFireworks({
-				playfield: playfieldRef.current as HTMLDivElement
-			})
+			startFireworks()
 		}
-	}, [status, playfieldRef, startFireworks])
+	}, [status, startFireworks])
 
 	/**
 	 * Handle a click at a given set of coordinates. If the playfield does not

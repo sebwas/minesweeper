@@ -13,8 +13,8 @@ function App() {
 
 	return (
 		<>
-			<FireworksProvider>
-				<GameProvider playfieldRef={playfieldRef}>
+			<FireworksProvider playfieldRef={playfieldRef}>
+				<GameProvider>
 					<div className={styles.app} ref={playfieldRef}>
 						<GameHeader />
 						<GameGrid />
