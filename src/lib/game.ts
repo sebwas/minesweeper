@@ -1,3 +1,4 @@
+import GameError from "./errors";
 import { between, limit, min0 } from "./numbers"
 
 type GameGrids = {
@@ -35,7 +36,7 @@ function updateSurroundingMineCounts(
 				continue
 			}
 
-			grid[y][x]++
+			grid[y][x] = Math.min(9, grid[y][x] + 1) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 		}
 	}
 }
@@ -57,12 +58,56 @@ function isInSparePerimeter(
 	)
 }
 
+function hasInvalidCoordinate(coordinates: Coordinates, dimensions: GridDimensions) {
+	return coordinates.x < 0
+		|| coordinates.y < 0
+		|| coordinates.x > (dimensions.width - 1)
+		|| coordinates.y > (dimensions.height - 1)
+}
+
+function getSparePerimeterCoordinates(spareField: Coordinates, sparePerimeter: number, dimensions: GridDimensions) {
+	const coordinates = []
+
+	for (let x = spareField.x - sparePerimeter; x <= spareField.x + sparePerimeter; x++) {
+		for (let y = spareField.y - sparePerimeter; y <= spareField.y + sparePerimeter; y++) {
+			const field: Coordinates = { x, y }
+
+			if (!hasInvalidCoordinate(field, dimensions)) {
+				coordinates.push(field)
+			}
+		}
+	}
+
+	return coordinates
+}
+
+function mineCountTooHigh(
+	dimensions: GridDimensions,
+	numberOfMines: number,
+	spareField: Coordinates,
+	sparePerimeter: number
+) {
+	const fieldCount = dimensions.width * dimensions.height
+
+	if (numberOfMines > (fieldCount - 1)) {
+		return true
+	}
+
+	const spareFields = getSparePerimeterCoordinates(spareField, sparePerimeter, dimensions)
+
+	return numberOfMines > (fieldCount - spareFields.length)
+}
+
 export function createGameGrids(
 	dimensions: GridDimensions,
 	numberOfMines: number,
 	spareField: Coordinates,
 	sparePerimeter = 1
 ) {
+	if (mineCountTooHigh(dimensions, numberOfMines, spareField, sparePerimeter)) {
+		throw GameError.mineCountTooHigh()
+	}
+
 	// Create the 4 different grid layers.
 	const mineGrid = createEmptyGrid<0|1>(dimensions)
 	const coverGrid = createEmptyGrid<0|1>(dimensions, 1)
@@ -110,7 +155,7 @@ export function createGameGrids(
 		cover: coverGrid,
 		flag: flagGrid,
 		mineCount: mineCountGrid
-	}
+	} as GameGrids
 }
 
 function getListOfFieldsToUncover(
