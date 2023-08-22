@@ -25,7 +25,7 @@ export default function Field({x, y, ...delegated}: {x: number, y: number}) {
 			return
 		}
 
-		handleGridClick({x, y}, isContextMenu)
+		handleGridClick({x, y}, isContextMenu, true)
 	}
 
 	if (status === GameStatus.lose && (mine[y][x] || flag[y][x])) {

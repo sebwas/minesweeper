@@ -18,7 +18,7 @@ type ProvidedContext = {
 	mineCount: MineGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>
 	status: GameStatus
 	difficulty: keyof typeof DIFFICULTIES
-	handleGridClick: (coordinates: Coordinates, isRightClick: boolean) => void
+	handleGridClick: (coordinates: Coordinates, isRightClick: boolean, skipValidityCheck: boolean) => void
 	setDifficulty: (difficulty: keyof typeof DIFFICULTIES) => void
 	restart: () => void
 }
@@ -117,11 +117,8 @@ export default function GameProvider(
 	/**
 	 * Handle a click at a given set of coordinates. If the playfield does not
 	 * yet exist, create it.
-	 *
-	 * @param clickCoordinates
-	 * @param isRightClick
 	 */
-	function handleGridClick(clickCoordinates: Coordinates, isRightClick = false) {
+	function handleGridClick(clickCoordinates: Coordinates, isRightClick = false, skipValidityCheck = false) {
 		const { x, y } = clickCoordinates
 
 		const currentGrids = status === GameStatus.running
@@ -132,7 +129,7 @@ export default function GameProvider(
 			setStatus(GameStatus.lose)
 		}
 
-		const newGrids = handleClick(currentGrids, clickCoordinates, isRightClick)
+		const newGrids = handleClick(currentGrids, clickCoordinates, isRightClick, skipValidityCheck)
 
 		setGrids(newGrids)
 

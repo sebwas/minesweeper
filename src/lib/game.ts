@@ -200,6 +200,63 @@ function getListOfFieldsToUncover(
 	return toBeUncovered
 }
 
+/**
+ * Provides a simple check if the provided game grids are valid. Simple, in this
+ * case, means that we are not checking for internal logic, e.g. if the
+ * mineCount matches the actual number of surrounding mines. Instead we only
+ * make sure that the data is valid (i.e. the dimensions match and the numbers
+ * are in the expected ranges.)
+ */
+function gridsAreValid(grids: GameGrids) {
+	const layers = Object.keys(grids)
+
+	if (
+		layers.length !== 4
+		|| !layers.includes('mine')
+		|| !layers.includes('cover')
+		|| !layers.includes('flag')
+		|| !layers.includes('mineCount')
+	) {
+		return GameError.gridsAreMissing()
+	}
+
+	const dimensions: GridDimensions = { width: grids.mine[0]?.length || 0, height: grids.mine.length }
+
+	if (
+		!(dimensions.width && dimensions.height)
+		|| !(grids.cover.length === dimensions.height && (grids.cover[0]?.length || 0) === dimensions.width)
+		|| !(grids.mineCount.length === dimensions.height && (grids.mineCount[0]?.length || 0) === dimensions.width)
+		|| !(grids.flag.length === dimensions.height && (grids.flag[0]?.length || 0) === dimensions.width)
+	) {
+		return GameError.dimensionMismatch()
+	}
+
+	const Set01 = new Set([0, 1])
+	const Set0To9 = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+	// Flag grid contains invalid elements.
+	if (grids.flag.flat().find(f => !Set01.has(f))) {
+		return GameError.flagGridHasUnexpectedValues()
+	}
+
+	// Mine grid contains invalid elements.
+	if (grids.mine.flat().find(f => !Set01.has(f))) {
+		return GameError.mineGridHasUnexpectedValues()
+	}
+
+	// Mine count grid contains invalid elements.
+	if (grids.mineCount.flat().find(f => !Set0To9.has(f))) {
+		return GameError.mineCountGridHasUnexpectedValues()
+	}
+
+	// Cover grid contains invalid elements.
+	if (grids.cover.flat().find(f => !Set01.has(f))) {
+		return GameError.coverGridHasUnexpectedValues()
+	}
+
+	return null
+}
+
 function copyGrid<T extends number>(grid: MineGrid<T>) {
 	return JSON.parse(JSON.stringify(grid)) as typeof grid
 }
@@ -226,7 +283,15 @@ function expandFieldsToUncover(grids: GameGrids, initial: Coordinates) {
 /**
  * Pure function to recalculate the grids after a click at the given coordinates.
  */
-export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: boolean) {
+export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: boolean, skipValidityCheck = false) {
+	if (!skipValidityCheck) {
+		const error = gridsAreValid(grids)
+
+		if (error) {
+			throw error
+		}
+	}
+
 	const { x, y } = click
 
 	const newGrids = {
