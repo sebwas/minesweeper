@@ -3,6 +3,7 @@ import { faBomb, faFlag } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { GameStatus, useGameState } from '../GameProvider'
+import VisuallyHidden from '../VisuallyHidden'
 
 import styles from './GameGrid.module.css'
 
@@ -35,6 +36,8 @@ export default function Field({x, y, ...delegated}: {x: number, y: number}) {
 		return (
 			<button className={`${styles.field} ${mineClass} ${flagClass}`}>
 				<FontAwesomeIcon icon={flag[y][x] ? faFlag : faBomb} />
+
+				<VisuallyHidden>lost, with { flag[y][x] ? 'flag' : 'mine' }</VisuallyHidden>
 			</button>
 		)
 	}
@@ -47,6 +50,8 @@ export default function Field({x, y, ...delegated}: {x: number, y: number}) {
 				onContextMenu={e => handleClick(e, true)}
 			>
 				<FontAwesomeIcon icon={faFlag} />
+
+				<VisuallyHidden>flagged</VisuallyHidden>
 			</button>
 		)
 	}
@@ -65,6 +70,8 @@ export default function Field({x, y, ...delegated}: {x: number, y: number}) {
 			{...delegated}
 			onClick={e => handleClick(e, false, false)}
 			onContextMenu={e => handleClick(e, true)}
-		/>
+		>
+			<VisuallyHidden>covered</VisuallyHidden>
+		</button>
 	)
 }
