@@ -169,6 +169,16 @@ export default function GameProvider({ children }: PropsWithChildren) {
 	// Destructure the grids to have more finegrained control.
 	const { mine, mineCount, flag, cover } = grids
 
+	let testUtils = {}
+
+	if (import.meta.env.MODE === 'test') {
+		testUtils = {
+			grids,
+			setGrids,
+			setStatus,
+		}
+	}
+
 	const exported = {
 		totalMines,
 		flaggedMineCount,
@@ -186,6 +196,8 @@ export default function GameProvider({ children }: PropsWithChildren) {
 		handleGridClick,
 		setDifficulty,
 		restart: resetGame,
+
+		...testUtils,
 	}
 
 	return (
