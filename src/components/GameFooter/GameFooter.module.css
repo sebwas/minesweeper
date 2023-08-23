@@ -17,12 +17,6 @@
 	padding: 0.25rem;
 }
 
-@media (max-width: 877px) {
-	.footer {
-		display: none;
-	}
-}
-
 .footer[disabled] * {
 	opacity: 0.3;
 }

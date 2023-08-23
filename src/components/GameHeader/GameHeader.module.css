@@ -4,6 +4,9 @@
 	align-items: stretch;
 	gap: 1rem;
 
+	max-width: 100vw;
+	box-sizing: border-box;
+
 	font-size: 2.5rem;
 
 	background-color: rgb(193, 199, 200);

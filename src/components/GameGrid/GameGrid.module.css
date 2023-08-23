@@ -3,12 +3,14 @@
 	--field-border: 4px;
 }
 
+.grid-outer {
+	border: 5px inset rgb(239, 239, 239);
+}
+
 .grid {
 	display: grid;
 	grid-template-rows: repeat(var(--row-count), var(--field-length));
 	grid-template-columns: repeat(var(--column-count), 27px);
-
-	border: 5px inset rgb(239, 239, 239);
 }
 
 .field {

@@ -1,0 +1,49 @@
+.inner-container {
+}
+
+.outer-container {
+	max-width: 100%;
+	box-sizing: border-box;
+	overflow: auto;
+
+	position: relative;
+}
+
+.inner-shadow {
+	--direction: 90deg;
+
+	background: rgb(0,0,0);
+	background: linear-gradient(var(--direction), rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+
+	pointer-events: none;
+
+	position: absolute;
+	top: 0;
+	bottom: 0;
+
+	width: 5%;
+
+	transition: opacity linear 100ms;
+}
+
+.left {
+	--direction: 90deg;
+
+	left: 0;
+	right: auto;
+}
+
+.right {
+	--direction: -90deg;
+
+	left: auto;
+	right: 0;
+}
+
+.show-1 {
+	opacity: 1;
+}
+
+.show-0 {
+	opacity: 0;
+}
