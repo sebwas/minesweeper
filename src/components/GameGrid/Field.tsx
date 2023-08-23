@@ -7,6 +7,8 @@ import VisuallyHidden from '../VisuallyHidden'
 
 import styles from './GameGrid.module.css'
 
+type ClickHandlerFunction = (e: React.MouseEvent, isContextMenu?: boolean, preventNormalClick?: boolean) => void
+
 export default function Field({x, y, ...delegated}: {x: number, y: number}) {
 	const { handleGridClick, cover, flag, mine, status, mineCount } = useGameState()
 
@@ -30,40 +32,72 @@ export default function Field({x, y, ...delegated}: {x: number, y: number}) {
 	}
 
 	if (status === GameStatus.lose && (mine[y][x] || flag[y][x])) {
-		const mineClass = mine[y][x] ? styles.mined : styles.unmined
-		const flagClass = flag[y][x] ? styles.flagged : styles.unflagged
-
 		return (
-			<button className={`${styles.field} ${mineClass} ${flagClass}`}>
-				<FontAwesomeIcon icon={flag[y][x] ? faFlag : faBomb} />
-
-				<VisuallyHidden>lost, with { flag[y][x] ? 'flag' : 'mine' }</VisuallyHidden>
-			</button>
+			<GameLostField
+				icon={flag[y][x] ? faFlag : faBomb}
+				isMined={Boolean(mine[y][x])}
+				isFlagged={Boolean(flag[y][x])}
+			/>
 		)
 	}
 
 	if (flag[y][x]) {
-		return (
-			<button
-				className={`${styles.field} ${styles.flag}`}
-				onClick={e => handleClick(e, false, true)}
-				onContextMenu={e => handleClick(e, true)}
-			>
-				<FontAwesomeIcon icon={faFlag} />
-
-				<VisuallyHidden>flagged</VisuallyHidden>
-			</button>
-		)
+		return <FlaggedField handleClick={handleClick} />
 	}
 
 	if (!cover[y][x]) {
-		return (
-			<button className={`${styles.field} ${styles.uncovered} ${styles[`count-${mineCount[y][x]}`]}`}>
-				{mineCount[y][x] || ''}
-			</button>
-		)
+		return <UncoveredField count={mineCount[y][x]} />
 	}
 
+	return <CoveredField handleClick={handleClick} {...delegated} />
+}
+
+function GameLostField(
+	{
+		icon,
+		isMined,
+		isFlagged
+	}: {
+		icon: typeof faFlag | typeof faBomb,
+		isMined: boolean,
+		isFlagged: boolean
+	}
+) {
+	const mineClass = isMined ? styles.mined : styles.unmined
+	const flagClass = isFlagged ? styles.flagged : styles.unflagged
+
+	return (
+		<button className={`${styles.field} ${mineClass} ${flagClass}`}>
+			<FontAwesomeIcon icon={icon} />
+
+			<VisuallyHidden>lost, with { isFlagged ? 'flag' : 'mine' }</VisuallyHidden>
+		</button>
+	)
+}
+
+function FlaggedField({ handleClick }: { handleClick: ClickHandlerFunction }) {
+	return (
+		<button
+			className={`${styles.field} ${styles.flag}`}
+			onClick={e => handleClick(e, false, true)}
+			onContextMenu={e => handleClick(e, true)}
+		>
+			<FontAwesomeIcon icon={faFlag} />
+
+			<VisuallyHidden>flagged</VisuallyHidden>
+		</button>
+	)
+}
+
+function UncoveredField({ count }: { count: number }) {
+	return (
+		<button className={`${styles.field} ${styles.uncovered} ${styles[`count-${count}`]}`}>
+			{count || ''}
+		</button>
+	)
+}
+
+function CoveredField({ handleClick, ...delegated }: { handleClick: ClickHandlerFunction }) {
 	return (
 		<button
 			className={styles.field}
