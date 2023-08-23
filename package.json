@@ -19,6 +19,9 @@
     "reset-css": "^5.0.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.0.1",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -27,6 +30,7 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
+    "happy-dom": "^10.10.4",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vitest": "^0.34.2"
