@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 
-import { createEmptyGrid, createGameGrids, handleClick } from '../../lib/game'
+import { createEmptyGrid, createGameGrids, fromSaveState, handleClick, toSaveState } from '../../lib/game'
 
 import { DIFFICULTIES } from '../../lib/settings'
 import { reduceToSum } from '../../lib/arrays'
@@ -35,6 +35,7 @@ export function useGameState() {
 
 // The local storage key to save and retrieve the difficulty the player set.
 const SAVED_DIFFICULTY_STORAGE_KEY = 'minesweeper-difficulty'
+const SAVED_GAME = 'minesweeper-savegame'
 
 export default function GameProvider({ children }: PropsWithChildren) {
 	/**
@@ -107,6 +108,44 @@ export default function GameProvider({ children }: PropsWithChildren) {
 			startFireworks()
 		}
 	}, [status, startFireworks])
+
+	// Load the saved playfield.
+	React.useEffect(() => {
+		const savedData = localStorage.getItem(SAVED_GAME)?.split('.')
+
+		if (!savedData) {
+			return
+		}
+
+		let saveGame = null
+
+		try {
+			saveGame = fromSaveState(savedData.at(1) ?? '')
+		} catch {
+			console.error('Could not load save state.')
+		}
+
+		if (saveGame) {
+			setGrids(saveGame)
+			setStatus(GameStatus.running)
+			setTimeElapsed(Number(savedData.at(0) ?? '0'))
+		}
+	}, [])
+
+	// Save the playfield when it changes.
+	React.useEffect(() => {
+		let gridsToSave: null | typeof grids = grids
+
+		if (status !== GameStatus.running) {
+			gridsToSave = null
+		}
+
+		const saveState = toSaveState(gridsToSave)
+
+		if (saveState) {
+			localStorage.setItem(SAVED_GAME, `${timeElapsed}.${saveState}`)
+		}
+	}, [status, grids, timeElapsed])
 
 	/**
 	 * Handle a click at a given set of coordinates. If the playfield does not
