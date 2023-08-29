@@ -50,6 +50,11 @@ export default function FireworksProvider(
 
 			const playfieldRect = playfield.getBoundingClientRect()
 
+			const bottomCenter = {
+				x: playfieldRect.x + playfieldRect.width / 2,
+				y: playfieldRect.y + playfieldRect.height,
+			}
+
 			// These initial locations are on either top corner of the playfield,
 			// which is the whole game container. They are supposed to have a
 			// few pixels of offset from their respective corner and a slightly
@@ -58,16 +63,16 @@ export default function FireworksProvider(
 			const initialLocations = [
 				{
 					startLocation: () => new Vector(
-						playfieldRect.x + -20 * Math.random(),
-						playfieldRect.y + -20 * Math.random()
+						bottomCenter.x + -20 * Math.random(),
+						bottomCenter.y - 20 * Math.random()
 					),
 					angle: () => (Math.random() * 60 - 30) - 135
 				},
 
 				{
 					startLocation: () => new Vector(
-						playfieldRect.x + playfieldRect.width + 20 * Math.random(),
-						playfieldRect.y + -20 * Math.random()
+						bottomCenter.x + 20 * Math.random(),
+						bottomCenter.y - 20 * Math.random()
 					),
 					angle: () => (Math.random() * 60 - 30) - 45
 				},
