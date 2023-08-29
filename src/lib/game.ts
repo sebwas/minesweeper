@@ -1,11 +1,12 @@
+import { chunkArray } from "./arrays";
 import GameError, { FieldIsFlaggedField, FieldIsMineField, FieldIsNotCovered } from "./errors";
 import { between, limit, min0 } from "./numbers"
 
 export type GameGrids = {
-    mine: MineGrid<0 | 1>;
-    cover: MineGrid<0 | 1>;
-    flag: MineGrid<0 | 1>;
-    mineCount: MineGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>;
+	mine: MineGrid<0 | 1>;
+	cover: MineGrid<0 | 1>;
+	flag: MineGrid<0 | 1>;
+	mineCount: MineGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>;
 }
 
 export function createEmptyGrid<T extends number>(dimensions: GridDimensions, initialValue = 0): MineGrid<T> {
@@ -43,7 +44,7 @@ function updateSurroundingMineCounts(
 
 function isInSparePerimeter(
 	dimensions: GridDimensions,
-	{x, y}: Coordinates,
+	{ x, y }: Coordinates,
 	spareField: Coordinates,
 	sparePerimeter: number
 ) {
@@ -109,9 +110,9 @@ export function createGameGrids(
 	}
 
 	// Create the 4 different grid layers.
-	const mineGrid = createEmptyGrid<0|1>(dimensions)
-	const coverGrid = createEmptyGrid<0|1>(dimensions, 1)
-	const flagGrid = createEmptyGrid<0|1>(dimensions)
+	const mineGrid = createEmptyGrid<0 | 1>(dimensions)
+	const coverGrid = createEmptyGrid<0 | 1>(dimensions, 1)
+	const flagGrid = createEmptyGrid<0 | 1>(dimensions)
 
 	// 9 is a special value used for mine fields.
 	const mineCountGrid = createEmptyGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>(dimensions)
@@ -130,7 +131,7 @@ export function createGameGrids(
 				}
 
 				// Define perimeter around initial field to not contain any mines.
-				if (isInSparePerimeter(dimensions, {x, y}, spareField, sparePerimeter)) {
+				if (isInSparePerimeter(dimensions, { x, y }, spareField, sparePerimeter)) {
 					continue
 				}
 
@@ -139,7 +140,7 @@ export function createGameGrids(
 				if (randomValue <= chanceOfPlacing) {
 					mineGrid[y][x] = 1
 					mineCountGrid[y][x] = 9
-					updateSurroundingMineCounts(mineCountGrid, {x, y})
+					updateSurroundingMineCounts(mineCountGrid, { x, y })
 					minesLeftToPlace--
 				}
 
@@ -309,8 +310,8 @@ export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: 
 
 		newGrids.flag[y][x] = Number(!newGrids.flag[y][x]) as 0 | 1
 
-	// It's a flagged field, so we want to bail.
-	// The click shouldn't get through, so this is only a failsafe.
+		// It's a flagged field, so we want to bail.
+		// The click shouldn't get through, so this is only a failsafe.
 	} else if (newGrids.flag[y][x]) {
 		throw new FieldIsFlaggedField()
 	} else if (newGrids.mine[y][x]) {
@@ -322,4 +323,120 @@ export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: 
 	}
 
 	return newGrids
+}
+
+function convertGridToString(grid: MineGrid, gridWordBitSize = 1) {
+	const finalArray = []
+
+	const flattenedGrid = grid.flat()
+
+	while (flattenedGrid.length) {
+		let currentWord = 0
+
+		for (let i = 0; i < 8; i += gridWordBitSize) {
+			currentWord <<= gridWordBitSize
+
+			const entry = flattenedGrid.shift() as number
+
+			if (typeof entry !== 'undefined') {
+				currentWord |= entry
+			}
+		}
+
+		finalArray.push(currentWord)
+	}
+
+	return btoa(String.fromCodePoint(...new Uint8Array(finalArray)))
+}
+
+function convertStringToGrid<T extends number = 0 | 1>(string: string, { width, height }: GridDimensions, gridWordBitSize = 1): MineGrid<T> {
+	const grid: T[] = []
+
+	const binString = atob(string)
+
+	// @ts-expect-error binString is not regarded as array-like, even though the JS engine treats it as such.
+	const array = Uint8Array.from(binString, i => i.codePointAt(0))
+
+	const extractor = Number.parseInt('1'.repeat(gridWordBitSize), 2)
+
+	for (let i = 0; i <= array.length; i++) {
+		const current = array.at(i) as number
+
+		for (let j = 8 - gridWordBitSize; j >= 0; j -= gridWordBitSize) {
+			grid.push((current >> j & extractor) as T)
+		}
+	}
+
+	const chunked = chunkArray<T>(grid, width)
+
+	return chunked.slice(0, height)
+}
+
+export const SAVE_STATE_VERSION = 1
+
+export function toSaveState<T extends null | GameGrids, R = T extends null ? null : string>(grids: T): R {
+	if (!grids) {
+		return null as R
+	}
+
+	const dimensions = `${grids.mine[0]?.length}x${grids.mine.length}`
+
+	const compressedGrids = Object.values({
+		mine: convertGridToString(grids.mine),
+		flag: convertGridToString(grids.flag),
+		cover: convertGridToString(grids.cover),
+		mineCount: convertGridToString(grids.mineCount, 4),
+	}).join('.')
+
+	return btoa(`${SAVE_STATE_VERSION}.${dimensions}.${compressedGrids}`) as R
+}
+
+function extractSaveData(saveState: string) {
+	const [
+		version,
+		size,
+		...grids
+	] = atob(saveState).split('.')
+
+	const [
+		mine,
+		flag,
+		cover,
+		mineCount
+	] = grids
+
+	const dimensions = {
+		width: Number(size.split('x').at(0)),
+		height: Number(size.split('x').at(1)),
+	}
+
+	return {
+		version: Number.parseInt(version, 10),
+		dimensions,
+		mine,
+		flag,
+		cover,
+		mineCount,
+	}
+}
+
+export function fromSaveState(saveState: null | string): null | GameGrids {
+	if (!saveState) {
+		return null
+	}
+
+	try {
+		const saveData = extractSaveData(saveState)
+
+		const [mine, flag, cover, mineCount] = [
+			convertStringToGrid(saveData.mine, saveData.dimensions),
+			convertStringToGrid(saveData.flag, saveData.dimensions),
+			convertStringToGrid(saveData.cover, saveData.dimensions),
+			convertStringToGrid(saveData.mineCount, saveData.dimensions, 4),
+		]
+
+		return { mine, flag, cover, mineCount }
+	} catch (e) {
+		throw new Error('Invalid save state.',)
+	}
 }

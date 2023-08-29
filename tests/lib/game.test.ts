@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { copyGrid, createEmptyGrid, createGameGrids, handleClick } from '../../src/lib/game'
+import { copyGrid, createEmptyGrid, createGameGrids, fromSaveState, handleClick, toSaveState } from '../../src/lib/game'
 import type { GameGrids } from '../../src/lib/game'
 import GameError, { FieldIsFlaggedField, FieldIsMineField, FieldIsNotCovered } from '../../src/lib/errors'
 
@@ -110,7 +110,7 @@ describe('The createGameGrids function', () => {
 				[9, 9, 9],
 			])
 
-			;({ mineCount } = createGameGrids({ width: 3, height: 3 }, 5, { x: 2, y: 0 }))
+				; ({ mineCount } = createGameGrids({ width: 3, height: 3 }, 5, { x: 2, y: 0 }))
 
 			expect(mineCount).toStrictEqual([
 				[9, 2, 0],
@@ -118,7 +118,7 @@ describe('The createGameGrids function', () => {
 				[9, 9, 9],
 			])
 
-			;({ mineCount } = createGameGrids({ width: 3, height: 3 }, 5, { x: 0, y: 2 }))
+				; ({ mineCount } = createGameGrids({ width: 3, height: 3 }, 5, { x: 0, y: 2 }))
 
 			expect(mineCount).toStrictEqual([
 				[9, 9, 9],
@@ -126,7 +126,7 @@ describe('The createGameGrids function', () => {
 				[0, 2, 9],
 			])
 
-			;({ mineCount } = createGameGrids({ width: 3, height: 3 }, 5, { x: 2, y: 2 }))
+				; ({ mineCount } = createGameGrids({ width: 3, height: 3 }, 5, { x: 2, y: 2 }))
 
 			expect(mineCount).toStrictEqual([
 				[9, 9, 9],
@@ -174,7 +174,7 @@ describe('The createGameGrids function', () => {
 				[9, 9, 9, 9, 9],
 			])
 
-			;({ mineCount } = createGameGrids({ width: 16, height: 16 }, 231, { x: 5, y: 7 }, 2))
+				; ({ mineCount } = createGameGrids({ width: 16, height: 16 }, 231, { x: 5, y: 7 }, 2))
 
 			const slicePerimeter2 = [
 				mineCount[5].slice(3, 8),
@@ -192,7 +192,7 @@ describe('The createGameGrids function', () => {
 				[5, 3, 3, 3, 5],
 			])
 
-			;({ mineCount } = createGameGrids({ width: 16, height: 16 }, 247, { x: 0, y: 0 }, 2))
+				; ({ mineCount } = createGameGrids({ width: 16, height: 16 }, 247, { x: 0, y: 0 }, 2))
 
 			const slicePerimeter2Corner = [
 				mineCount[0].slice(0, 4),
@@ -208,7 +208,7 @@ describe('The createGameGrids function', () => {
 				[9, 9, 9, 9],
 			])
 
-			;({ mineCount } = createGameGrids({ width: 16, height: 16 }, 241, { x: 5, y: 0 }, 2))
+				; ({ mineCount } = createGameGrids({ width: 16, height: 16 }, 241, { x: 5, y: 0 }, 2))
 
 			const slicePerimeter2Edge = [
 				mineCount[0].slice(2, 9),
@@ -248,7 +248,7 @@ describe('The createGameGrids function', () => {
 				[1, 1, 1],
 			])
 
-			;({ mine } = createGameGrids({ width: 3, height: 3 }, 5, { x: 2, y: 0 }))
+				; ({ mine } = createGameGrids({ width: 3, height: 3 }, 5, { x: 2, y: 0 }))
 
 			expect(mine).toStrictEqual([
 				[1, 0, 0],
@@ -256,7 +256,7 @@ describe('The createGameGrids function', () => {
 				[1, 1, 1],
 			])
 
-			;({ mine } = createGameGrids({ width: 3, height: 3 }, 5, { x: 0, y: 2 }))
+				; ({ mine } = createGameGrids({ width: 3, height: 3 }, 5, { x: 0, y: 2 }))
 
 			expect(mine).toStrictEqual([
 				[1, 1, 1],
@@ -264,7 +264,7 @@ describe('The createGameGrids function', () => {
 				[0, 0, 1],
 			])
 
-			;({ mine } = createGameGrids({ width: 3, height: 3 }, 5, { x: 2, y: 2 }))
+				; ({ mine } = createGameGrids({ width: 3, height: 3 }, 5, { x: 2, y: 2 }))
 
 			expect(mine).toStrictEqual([
 				[1, 1, 1],
@@ -312,7 +312,7 @@ describe('The createGameGrids function', () => {
 				[1, 1, 1, 1, 1],
 			])
 
-			;({ mine } = createGameGrids({ width: 16, height: 16 }, 231, { x: 5, y: 7 }, 2))
+				; ({ mine } = createGameGrids({ width: 16, height: 16 }, 231, { x: 5, y: 7 }, 2))
 
 			const slicePerimeter2 = [
 				mine[4].slice(2, 9),
@@ -334,7 +334,7 @@ describe('The createGameGrids function', () => {
 				[1, 1, 1, 1, 1, 1, 1],
 			])
 
-			;({ mine } = createGameGrids({ width: 16, height: 16 }, 247, { x: 0, y: 0 }, 2))
+				; ({ mine } = createGameGrids({ width: 16, height: 16 }, 247, { x: 0, y: 0 }, 2))
 
 			const slicePerimeter2Corner = [
 				mine[0].slice(0, 4),
@@ -350,7 +350,7 @@ describe('The createGameGrids function', () => {
 				[1, 1, 1, 1],
 			])
 
-			;({ mine } = createGameGrids({ width: 16, height: 16 }, 241, { x: 5, y: 0 }, 2))
+				; ({ mine } = createGameGrids({ width: 16, height: 16 }, 241, { x: 5, y: 0 }, 2))
 
 			const slicePerimeter2Edge = [
 				mine[0].slice(2, 9),
@@ -392,7 +392,7 @@ describe('The createGameGrids function', () => {
 				[1, 1, 1, 1, 1],
 			])
 
-			;({ cover } = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 }))
+				; ({ cover } = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 }))
 
 			expect(cover).toStrictEqual([
 				[1, 1, 1, 1, 1],
@@ -414,7 +414,7 @@ describe('The createGameGrids function', () => {
 				[1, 1, 1, 1, 1],
 			])
 
-			;({ cover } = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 }))
+				; ({ cover } = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 }))
 
 			expect(cover).toStrictEqual([
 				[1, 1, 1, 1, 1],
@@ -450,7 +450,7 @@ describe('The createGameGrids function', () => {
 				[0, 0, 0, 0, 0],
 			])
 
-			;({ flag } = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 }))
+				; ({ flag } = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 }))
 
 			expect(flag).toStrictEqual([
 				[0, 0, 0, 0, 0],
@@ -472,7 +472,7 @@ describe('The createGameGrids function', () => {
 				[0, 0, 0, 0, 0],
 			])
 
-			;({ flag } = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 }))
+				; ({ flag } = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 }))
 
 			expect(flag).toStrictEqual([
 				[0, 0, 0, 0, 0],
@@ -571,28 +571,28 @@ describe('The handleClick function', () => {
 		describe('dimension mismatch', () => {
 			Object.entries({
 				'mismatch mine grid': {
-					mine: <MineGrid<0|1>>createEmptyGrid({ width: 2, height: 2 }),
-					flag: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
-					mineCount: <MineGrid<0|1|2|3|4|5|6|7|8|9>>createEmptyGrid({ width: 4, height: 4 }),
-					cover: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
+					mine: <MineGrid<0 | 1>>createEmptyGrid({ width: 2, height: 2 }),
+					flag: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
+					mineCount: <MineGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>>createEmptyGrid({ width: 4, height: 4 }),
+					cover: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
 				},
 				'mismatch flag grid': {
-					mine: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
-					flag: <MineGrid<0|1>>createEmptyGrid({ width: 2, height: 2 }),
-					mineCount: <MineGrid<0|1|2|3|4|5|6|7|8|9>>createEmptyGrid({ width: 4, height: 4 }),
-					cover: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
+					mine: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
+					flag: <MineGrid<0 | 1>>createEmptyGrid({ width: 2, height: 2 }),
+					mineCount: <MineGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>>createEmptyGrid({ width: 4, height: 4 }),
+					cover: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
 				},
 				'mismatch mineCount grid': {
-					mine: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
-					flag: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
-					mineCount: <MineGrid<0|1|2|3|4|5|6|7|8|9>>createEmptyGrid({ width: 2, height: 2 }),
-					cover: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
+					mine: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
+					flag: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
+					mineCount: <MineGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>>createEmptyGrid({ width: 2, height: 2 }),
+					cover: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
 				},
 				'mismatch cover grid': {
-					mine: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
-					flag: <MineGrid<0|1>>createEmptyGrid({ width: 4, height: 4 }),
-					mineCount: <MineGrid<0|1|2|3|4|5|6|7|8|9>>createEmptyGrid({ width: 4, height: 4 }),
-					cover: <MineGrid<0|1>>createEmptyGrid({ width: 2, height: 2 }),
+					mine: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
+					flag: <MineGrid<0 | 1>>createEmptyGrid({ width: 4, height: 4 }),
+					mineCount: <MineGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>>createEmptyGrid({ width: 4, height: 4 }),
+					cover: <MineGrid<0 | 1>>createEmptyGrid({ width: 2, height: 2 }),
 				},
 			}).forEach(([test, grids]) => {
 				it(`throws an error when the supplied grids are not valid: ${test}`, () => {
@@ -884,5 +884,94 @@ describe('The handleClick function', () => {
 		expect(
 			() => handleClick(grids, { x: 0, y: 0 }, false)
 		).toThrow(FieldIsMineField)
+	})
+})
+
+describe('The game save feature', () => {
+	describe('The toSaveState function', () => {
+		it('returns a valid base64 string', () => {
+			const grids = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 })
+
+			const saveState = toSaveState(grids)
+
+			expect(atob(saveState))
+		})
+
+		it('has 6 segments each separated by a dot', () => {
+			const grids = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 })
+
+			const saveState = toSaveState(grids)
+
+			expect(atob(saveState).split('.')).toHaveLength(6)
+		})
+
+		it('has the save version number as the first segment', () => {
+			const grids = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 })
+
+			const saveState = toSaveState(grids)
+
+			expect(JSON.parse(atob(saveState).split('.').at(0) as string)).toBeTypeOf('number')
+		})
+
+		it('has the playfield dimensions as the second segment', () => {
+			const grids5x5 = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 })
+			const grids7x3 = createGameGrids({ width: 7, height: 3 }, 12, { x: 1, y: 1 })
+
+			const saveState5x5 = toSaveState(grids5x5)
+			const saveState7x3 = toSaveState(grids7x3)
+
+			expect(atob(saveState5x5).split('.').at(1)).toBe('5x5')
+			expect(atob(saveState7x3).split('.').at(1)).toBe('7x3')
+		})
+
+		it('has the playfields as valid base64 strings for the remaining segments', () => {
+			const grids = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 })
+
+			const saveState = toSaveState(grids)
+			const decodedAndSplitSaveState = atob(saveState).split('.')
+
+			expect(atob(decodedAndSplitSaveState.at(2) as string)).toBeTypeOf('string')
+			expect(atob(decodedAndSplitSaveState.at(3) as string)).toBeTypeOf('string')
+			expect(atob(decodedAndSplitSaveState.at(4) as string)).toBeTypeOf('string')
+			expect(atob(decodedAndSplitSaveState.at(5) as string)).toBeTypeOf('string')
+		})
+
+		it('saves the mine field correctly', () => {
+			const grids = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 })
+
+			const saveState = toSaveState(grids)
+			const decodedAndSplitSaveState = atob(saveState).split('.')
+
+			// The minefield must (according to the placing rules and the
+			// playfield settings) be in the shape of:
+			const expectedMineField = [
+				[1, 1, 1, 1, 1],
+				[1, 0, 0, 0, 1],
+				[1, 0, 0, 0, 1],
+				[1, 0, 0, 0, 1],
+				[1, 1, 1, 1, 1],
+			]
+
+			let mineField: string | Uint8Array = decodedAndSplitSaveState.at(2) as string
+
+			// @ts-expect-error  the minefield is not regarded as array-like by
+			//                   TS, even though the JS engine treats it as such.
+			mineField = Uint8Array.from(atob(mineField), i => i.codePointAt(0))
+			mineField = [...mineField].map(i => i.toString(2).padStart(8, '0')).join('')
+
+			expect(mineField).toContain(expectedMineField.flat().join(''))
+		})
+	})
+
+	describe('The fromSaveState function', () => {
+		it('restores the grids from the save state', () => {
+			const grids = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 })
+
+			const saveState = toSaveState(grids)
+
+			const restored = fromSaveState(saveState)
+
+			expect(restored).toStrictEqual(grids)
+		})
 	})
 })
