@@ -36,19 +36,12 @@ export default function ScrollShadow(
 		}
 
 		containerElement.addEventListener('scroll', updateScrollPosition)
+		window.addEventListener('resize', updateScrollPosition)
 
-		return () => containerElement.removeEventListener('scroll', updateScrollPosition)
-	}, [])
-
-	React.useEffect(() => {
-		if (!innerContainer.current) {
-			return
+		return function unregisterActions() {
+			containerElement.removeEventListener('scroll', updateScrollPosition)
+			window.removeEventListener('resize', updateScrollPosition)
 		}
-
-		const containerElement = innerContainer.current as HTMLDivElement
-
-		containerElement.scrollLeft = scrollLeft.current
-		containerElement.scrollTop = scrollTop.current
 	}, [])
 
 	React.useEffect(() => {
@@ -75,10 +68,19 @@ export default function ScrollShadow(
 		}
 
 		parentElement?.addEventListener('scroll', updateScrollPosition)
+		window.addEventListener('resize', updateScrollPosition)
 
 		updateScrollPosition()
 
-		return () => parentElement?.removeEventListener('scroll', updateScrollPosition)
+		const observer = new MutationObserver(updateScrollPosition)
+
+		observer.observe(innerElement, { childList: true })
+
+		return function unregisterActions() {
+			parentElement?.removeEventListener('scroll', updateScrollPosition)
+			window.removeEventListener('resize', updateScrollPosition)
+			observer.disconnect()
+		}
 	}, [element, margin])
 
 	return (
@@ -96,7 +98,6 @@ export default function ScrollShadow(
 
 			<InnerShadow side="left" show={showLeftShadow} />
 			<InnerShadow side="right" show={showRightShadow} />
-
 			<InnerShadow side="top" show={showTopShadow} />
 			<InnerShadow side="bottom" show={showBottomShadow} />
 		</div>
