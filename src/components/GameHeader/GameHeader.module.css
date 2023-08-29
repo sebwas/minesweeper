@@ -31,6 +31,10 @@
 	place-items: center;
 }
 
+.button:active {
+	border: 3px inset rgb(239, 239, 239);
+}
+
 .button img {
 	aspect-ratio: 1;
 	width: 100%;
