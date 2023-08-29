@@ -1,12 +1,20 @@
-.inner-container {
-}
-
 .outer-container {
+	max-height: 100%;
 	max-width: 100%;
+
 	box-sizing: border-box;
-	overflow: auto;
+
+	overflow: hidden;
 
 	position: relative;
+	display: flex;
+}
+
+.inner-container {
+	box-sizing: border-box;
+
+	overflow: auto;
+	flex: 1 1;
 }
 
 .inner-shadow {
@@ -18,10 +26,7 @@
 	pointer-events: none;
 
 	position: absolute;
-	top: 0;
-	bottom: 0;
-
-	width: 5%;
+	inset: 0;
 
 	transition: opacity linear 100ms;
 }
@@ -29,6 +34,7 @@
 .left {
 	--direction: 90deg;
 
+	width: clamp(10px, 5%, 25px);
 	left: 0;
 	right: auto;
 }
@@ -36,8 +42,25 @@
 .right {
 	--direction: -90deg;
 
+	width: clamp(10px, 5%, 25px);
 	left: auto;
 	right: 0;
+}
+
+.top {
+	--direction: 180deg;
+
+	height: clamp(10px, 5%, 25px);
+	bottom: auto;
+	top: 0;
+}
+
+.bottom {
+	--direction: 0deg;
+
+	height: clamp(10px, 5%, 25px);
+	top: auto;
+	bottom: 0;
 }
 
 .show-1 {

@@ -15,34 +15,40 @@ export default function ScrollShadow(
 	}>
 ) {
 	const scrollLeft = React.useRef(0)
+	const scrollTop = React.useRef(0)
 	const [showLeftShadow, setShowLeftShadow] = React.useState(false)
 	const [showRightShadow, setShowRightShadow] = React.useState(false)
-	const container = React.useRef<HTMLDivElement>(null)
+	const [showTopShadow, setShowTopShadow] = React.useState(false)
+	const [showBottomShadow, setShowBottomShadow] = React.useState(false)
+	const innerContainer = React.useRef<HTMLDivElement>(null)
+	const outerContainer = React.useRef<HTMLDivElement>(null)
 
 	React.useEffect(() => {
-		if (!container.current) {
+		if (!innerContainer.current) {
 			return
 		}
 
-		const containerElement = container.current as HTMLDivElement
+		const containerElement = innerContainer.current as HTMLDivElement
 
-		function updateScrollLeft() {
+		function updateScrollPosition() {
 			scrollLeft.current = containerElement.scrollLeft
+			scrollTop.current = containerElement.scrollTop
 		}
 
-		containerElement.addEventListener('scroll', updateScrollLeft)
+		containerElement.addEventListener('scroll', updateScrollPosition)
 
-		return () => containerElement.removeEventListener('scroll', updateScrollLeft)
+		return () => containerElement.removeEventListener('scroll', updateScrollPosition)
 	}, [])
 
 	React.useEffect(() => {
-		if (!container.current) {
+		if (!innerContainer.current) {
 			return
 		}
 
-		const containerElement = container.current as HTMLDivElement
+		const containerElement = innerContainer.current as HTMLDivElement
 
 		containerElement.scrollLeft = scrollLeft.current
+		containerElement.scrollTop = scrollTop.current
 	}, [])
 
 	React.useEffect(() => {
@@ -51,40 +57,53 @@ export default function ScrollShadow(
 		}
 
 		const innerElement = element.current as HTMLElement
-		const parentElement = container.current as HTMLDivElement
+		const parentElement = innerContainer.current as HTMLDivElement
+		const outerElement = outerContainer.current as HTMLDivElement
 
-		function updateScrollLeft() {
+		function updateScrollPosition() {
 			const innerWidth = innerElement.scrollWidth
-			const outerWidth = innerElement.getBoundingClientRect().width
+			const outerWidth = outerElement.getBoundingClientRect().width
 
 			setShowLeftShadow(parentElement.scrollLeft > margin)
 			setShowRightShadow((parentElement.scrollLeft + outerWidth) < (innerWidth - margin))
+
+			const innerHeight = innerElement.scrollHeight
+			const outerHeight = outerElement.getBoundingClientRect().height
+
+			setShowTopShadow(parentElement.scrollTop > margin)
+			setShowBottomShadow((parentElement.scrollTop + outerHeight) < (innerHeight - margin))
 		}
 
-		parentElement?.addEventListener('scroll', updateScrollLeft)
+		parentElement?.addEventListener('scroll', updateScrollPosition)
 
-		updateScrollLeft()
+		updateScrollPosition()
 
-		return () => parentElement?.removeEventListener('scroll', updateScrollLeft)
+		return () => parentElement?.removeEventListener('scroll', updateScrollPosition)
 	}, [element, margin])
 
 	return (
-		<div style={{ position: 'relative' }}>
+		<div
+			className={`${styles['outer-container']} ${className}`}
+			ref={outerContainer}
+		>
 			<div
+				className={styles['inner-container']}
 				{...delegated}
-				ref={container}
-				className={`${styles['outer-container']} ${className}`}
+				ref={innerContainer}
 			>
 				{children}
 			</div>
 
 			<InnerShadow side="left" show={showLeftShadow} />
 			<InnerShadow side="right" show={showRightShadow} />
+
+			<InnerShadow side="top" show={showTopShadow} />
+			<InnerShadow side="bottom" show={showBottomShadow} />
 		</div>
 	)
 }
 
-function InnerShadow({ side, show }: { side: 'left' | 'right', show: boolean }) {
+function InnerShadow({ side, show }: { side: 'left' | 'right' | 'top' | 'bottom', show: boolean }) {
 	return (
 		<div className={`${styles['inner-shadow']} ${styles[side]} ${styles[`show-${Number(show)}`]}`} />
 	)
