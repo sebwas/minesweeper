@@ -13,7 +13,11 @@ export default function GameGrid() {
 	const grid = React.useRef<HTMLDivElement>(null)
 
 	return (
-		<InnerScrollShadow element={grid} className={styles['grid-outer']} margin={10}>
+		<InnerScrollShadow
+			element={grid}
+			className={styles['grid-outer']}
+			margin={10}
+		>
 			<div
 				ref={grid}
 				className={styles.grid}

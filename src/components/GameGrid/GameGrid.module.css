@@ -4,6 +4,8 @@
 }
 
 .grid-outer {
+	flex: 1 1;
+
 	border: 5px inset rgb(239, 239, 239);
 }
 
@@ -11,6 +13,9 @@
 	display: grid;
 	grid-template-rows: repeat(var(--row-count), var(--field-length));
 	grid-template-columns: repeat(var(--column-count), 27px);
+
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .field {

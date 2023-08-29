@@ -2,6 +2,8 @@
 	background-color: rgb(193, 199, 200);
 	color: #242424;
 
+	flex: 0 0;
+
 	font-weight: 500;
 	font-size: 0.75rem;
 	text-transform: uppercase;
