@@ -113,7 +113,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
 	React.useEffect(() => {
 		const savedData = localStorage.getItem(SAVED_GAME)?.split('.')
 
-		if (!savedData) {
+		if (!savedData?.length) {
 			return
 		}
 
@@ -144,6 +144,8 @@ export default function GameProvider({ children }: PropsWithChildren) {
 
 		if (saveState) {
 			localStorage.setItem(SAVED_GAME, `${timeElapsed}.${saveState}`)
+		} else {
+			localStorage.setItem(SAVED_GAME, '')
 		}
 	}, [status, grids, timeElapsed])
 
