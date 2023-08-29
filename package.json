@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "pwa-assets-generator && tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
@@ -26,6 +27,7 @@
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "@vite-pwa/assets-generator": "^0.0.8",
     "@vitejs/plugin-react": "^4.0.3",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -33,6 +35,7 @@
     "happy-dom": "^10.10.4",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
+    "vite-plugin-pwa": "^0.16.4",
     "vitest": "^0.34.2"
   }
 }

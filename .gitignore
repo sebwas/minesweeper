@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+public/pwa*
+public/maskable*
+public/apple-touch*
