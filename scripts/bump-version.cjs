@@ -24,11 +24,12 @@ if (args.major) {
 	patch++
 } else {
 	console.log(`
-Usage: ${process.argv[1]} [OPTIONS] [--dry-run]
+Usage: ${process.argv[1]} [OPTIONS] [--git] [--dry-run]
   --major       Major version bump
   --minor       Minor version bump
   --patch       Patch version bump
 
+  --git         Automatically commit the package json and add a git tag
   --dry-run     Show the file contents without writing them to the disk
 
 Exactly one type should be selected.
@@ -60,5 +61,10 @@ if (args['dry-run']) {
 	console.info('\nOmit the --dry-run option to write to disk.')
 } else {
 	fs.writeFileSync(packageJsonPath, newContent)
-	childProcess.execSync(`git tag v${newVersion}`)
+
+	if (args.git) {
+		childProcess.execSync(`git add ${packageJsonPath}`)
+		childProcess.execSync(`git commit -m "Release version ${newVersion}"`)
+		childProcess.execSync(`git tag v${newVersion}`)
+	}
 }
