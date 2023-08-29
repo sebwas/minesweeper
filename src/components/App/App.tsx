@@ -5,14 +5,14 @@ import GameHeader from "../GameHeader"
 import GameGrid from "../GameGrid"
 import GameFooter from '../GameFooter'
 import FireworksProvider from "../Fireworks"
-import useOnlyInPwa from '../../hooks/use-only-in-pwa'
+import useIsInPwa from '../../hooks/use-is-in-pwa'
 
 import styles from './App.module.css'
 
 function App() {
 	const playfieldRef = React.useRef<HTMLDivElement>(null)
 
-	const isInPwa = useOnlyInPwa()
+	const isInPwa = useIsInPwa()
 
 	return (
 		<>
