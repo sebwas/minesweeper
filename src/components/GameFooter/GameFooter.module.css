@@ -38,3 +38,26 @@
 
 	position: relative;
 }
+
+.edit-button {
+	height: 1.5rem;
+	width: auto;
+	aspect-ratio: 1;
+
+	padding: 0.125rem;
+	box-sizing: border-box;
+
+	display: flex;
+	place-items: center;
+
+	border: 2px outset rgb(239, 239, 239);
+}
+
+.edit-button:active {
+	border: 2px inset rgb(239, 239, 239);
+}
+
+.edit-button svg {
+	height: auto;
+	width: 1rem;
+}
