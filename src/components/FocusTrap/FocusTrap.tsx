@@ -42,29 +42,38 @@ export default function FocusTrap (
 	const entrySentry = React.useRef<HTMLDivElement>(null)
 	const exitSentry = React.useRef<HTMLDivElement>(null)
 
-	function focus(which: 'first' | 'last') {
-		const element = getFocusableElement(
-			container.current as HTMLElement,
-			which,
-			[
-				entrySentry.current as HTMLDivElement,
-				exitSentry.current as HTMLDivElement
-			],
-			allowForProgramaticTab
-		);
+	const focus = React.useCallback(
+		function focus(which: 'first' | 'last') {
+			const element = getFocusableElement(
+				container.current as HTMLElement,
+				which,
+				[
+					entrySentry.current as HTMLDivElement,
+					exitSentry.current as HTMLDivElement
+				],
+				allowForProgramaticTab
+			);
 
-		element?.focus()
+			element?.focus()
 
-		return element
-	}
+			return element
+		},
+		[allowForProgramaticTab]
+	)
 
-	function focusFirst() {
-		focus('first')
-	}
+	const focusFirst = React.useCallback(
+		function focusFirst() {
+			focus('first')
+		},
+		[focus]
+	)
 
-	function focusLast() {
-		focus('last')
-	}
+	const focusLast = React.useCallback(
+		function focusLast() {
+			focus('last')
+		},
+		[focus]
+	)
 
 	React.useEffect(() => {
 		const activeElement = document.activeElement
@@ -73,7 +82,7 @@ export default function FocusTrap (
 
 		// @ts-expect-error TS doesn't know that it was focussed before.
 		return () => activeElement?.focus()
-	}, [])
+	}, [focusFirst])
 
 	React.useEffect(() => {
 		const entryElement = entrySentry.current
@@ -88,7 +97,7 @@ export default function FocusTrap (
 			entryElement?.addEventListener('focus', focusLast)
 			exitElement?.addEventListener('focus', focusFirst)
 		}
-	}, [])
+	}, [focusFirst, focusLast])
 
 	return (<ContainerElement className={className} {...delegated} ref={container}>
 		<div ref={entrySentry} tabIndex={0} data-entry />
