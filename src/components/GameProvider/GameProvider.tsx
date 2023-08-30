@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react'
 
 import { createEmptyGrid, createGameGrids, fromSaveState, handleClick, toSaveState } from '../../lib/game'
 
-import { DIFFICULTIES } from '../../lib/settings'
+import useDifficulties from '../../hooks/use-difficulties'
 import { reduceToSum } from '../../lib/arrays'
 import { useFireworks } from '../Fireworks'
 import { FieldIsFlaggedField, FieldIsMineField, FieldIsNotCovered } from '../../lib/errors'
@@ -18,9 +18,11 @@ type ProvidedContext = {
 	flag: MineGrid<0 | 1>
 	mineCount: MineGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>
 	status: GameStatus
-	difficulty: keyof typeof DIFFICULTIES
+	difficulties: ReturnType<typeof useDifficulties>[0]
+	difficulty: keyof ReturnType<typeof useDifficulties>[0]
+	setCustomDifficulty: ReturnType<typeof useDifficulties>[1]
 	handleGridClick: (coordinates: Coordinates, isRightClick: boolean, skipValidityCheck: boolean) => void
-	setDifficulty: (difficulty: keyof typeof DIFFICULTIES) => void
+	setDifficulty: (difficulty: keyof ReturnType<typeof useDifficulties>[0]) => void
 	restart: () => void
 }
 
@@ -53,15 +55,17 @@ export default function GameProvider({ children }: PropsWithChildren) {
 		}
 	}
 
-	const [difficulty, setDifficulty] = React.useState<keyof typeof DIFFICULTIES>(
+	const [difficulties, setCustomDifficulty] = useDifficulties()
+
+	const [difficulty, setDifficulty] = React.useState<keyof typeof difficulties>(
 		() => {
 			const savedDifficulty = localStorage.getItem(SAVED_DIFFICULTY_STORAGE_KEY)
 
-			if (!savedDifficulty || !Object.keys(DIFFICULTIES).includes(savedDifficulty)) {
-				return Object.keys(DIFFICULTIES)[0] as PresetDifficulties
+			if (!savedDifficulty || !Object.keys(difficulties).includes(savedDifficulty)) {
+				return Object.keys(difficulties)[0] as keyof typeof difficulties
 			}
 
-			return savedDifficulty as PresetDifficulties
+			return savedDifficulty as keyof typeof difficulties
 		}
 	)
 
@@ -71,7 +75,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
 	}, [difficulty])
 
 	const [grids, setGrids] = React.useState(
-		() => initializeEmptyGrids(DIFFICULTIES[difficulty].dimensions)
+		() => initializeEmptyGrids(difficulties[difficulty].dimensions)
 	)
 
 	const [status, setStatus] = React.useState(GameStatus.idle)
@@ -97,8 +101,8 @@ export default function GameProvider({ children }: PropsWithChildren) {
 			return
 		}
 
-		setGrids(initializeEmptyGrids(DIFFICULTIES[difficulty].dimensions))
-	}, [status, difficulty])
+		setGrids(initializeEmptyGrids(difficulties[difficulty].dimensions))
+	}, [status, difficulty, difficulties])
 
 	const { startFireworks } = useFireworks()
 
@@ -174,7 +178,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
 
 		setGrids(newGrids)
 
-		if (reduceToSum(newGrids.cover.map(reduceToSum)) === DIFFICULTIES[difficulty].mineCount) {
+		if (reduceToSum(newGrids.cover.map(reduceToSum)) === difficulties[difficulty].mineCount) {
 			setStatus(GameStatus.win)
 		}
 	}
@@ -191,7 +195,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
 		resetGame()
 		setStatus(GameStatus.running)
 
-		const selectedDifficulty = DIFFICULTIES[difficulty]
+		const selectedDifficulty = difficulties[difficulty]
 
 		const grid = createGameGrids(
 			selectedDifficulty.dimensions,
@@ -224,6 +228,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
 		totalMines,
 		flaggedMineCount,
 		timeElapsed,
+		difficulties,
 		difficulty,
 		status,
 
@@ -237,6 +242,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
 		handleGridClick,
 		setDifficulty,
 		restart: resetGame,
+		setCustomDifficulty,
 
 		...testUtils,
 	}

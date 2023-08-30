@@ -1,9 +1,8 @@
 :root {
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	font-family: windowsregular, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
 
-	color: rgba(255, 255, 255, 0.87);
 	background-color: #242424;
 
 	font-synthesis: none;
@@ -11,6 +10,10 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
+
+	--border-color: rgb(239, 239, 239);
+	--background-color: rgb(192, 192, 192);
+	--blue: rgb(0, 0, 126);
 }
 
 body {

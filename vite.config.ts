@@ -29,6 +29,10 @@ export default defineConfig({
     }),
   ],
 
+  build: {
+    cssMinify: 'lightningcss',
+  },
+
   test: {
     globals: true,
     environment: 'happy-dom',

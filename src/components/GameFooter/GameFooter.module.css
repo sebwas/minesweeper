@@ -1,5 +1,5 @@
 .footer {
-	background-color: rgb(193, 199, 200);
+	background-color: var(--background-color);
 	color: #242424;
 
 	flex: 0 0;
@@ -14,7 +14,7 @@
 	align-items: center;
 	justify-content: center;
 
-	border: 3px inset rgb(239, 239, 239);
+	border: 3px inset var(--border-color);
 
 	padding: 0.25rem;
 }
@@ -24,7 +24,9 @@
 }
 
 .footer select {
-	border: 2px inset rgb(239, 239, 239);
+	border: 2px inset var(--border-color);
+
+	font-family: inherit;
 	font-size: 0.75rem;
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
@@ -50,11 +52,11 @@
 	display: flex;
 	place-items: center;
 
-	border: 2px outset rgb(239, 239, 239);
+	border: 2px outset var(--border-color);
 }
 
 .edit-button:active {
-	border: 2px inset rgb(239, 239, 239);
+	border: 2px inset var(--border-color);
 }
 
 .edit-button svg {
