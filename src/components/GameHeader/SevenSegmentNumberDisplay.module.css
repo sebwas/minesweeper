@@ -1,7 +1,7 @@
 .display {
 	display: flex;
 
-	border: 2px inset rgb(239, 239, 239);
+	border: 2px inset var(--border-color);
 }
 
 .char {

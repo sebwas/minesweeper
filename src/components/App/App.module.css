@@ -13,15 +13,15 @@
 
 	margin: 0 auto;
 
-	border: 4px outset rgb(239, 239, 239);
+	border: 4px outset var(--border-color);
 
 	position: relative;
 	z-index: 1;
 }
 
 .github-corner svg {
-	fill:#fff;
-	color:#151513;
+	fill: #fff;
+	color: #151513;
 
 	position: absolute;
 
@@ -39,21 +39,24 @@
 }
 
 @keyframes octocat-wave {
-	0%, 100% {
+	0%,
+	100% {
 		transform: rotate(0);
 	}
 
-	20%, 60% {
+	20%,
+	60% {
 		transform: rotate(-25deg);
 	}
 
-	40%, 80% {
+	40%,
+	80% {
 		transform: rotate(10deg);
 	}
 }
 
 @media (max-width:500px) {
-	.github-corner:hover .octo-arm{
+	.github-corner:hover .octo-arm {
 		animation: none;
 	}
 

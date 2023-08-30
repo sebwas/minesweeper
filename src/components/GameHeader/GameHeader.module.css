@@ -11,13 +11,13 @@
 
 	font-size: 2.5rem;
 
-	background-color: rgb(193, 199, 200);
+	background-color: var(--background-color);
 	padding: 0.5rem;
-	border: 3px inset rgb(239, 239, 239);
+	border: 3px inset var(--border-color);
 }
 
 .button {
-	border: 3px outset rgb(239, 239, 239);
+	border: 3px outset var(--border-color);
 	border-radius: 0;
 
 	flex: 1 0;
@@ -32,7 +32,7 @@
 }
 
 .button:active {
-	border: 3px inset rgb(239, 239, 239);
+	border: 3px inset var(--border-color);
 }
 
 .button img {

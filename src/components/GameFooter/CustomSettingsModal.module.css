@@ -1,0 +1,51 @@
+.form {
+	display: grid;
+	grid-template-columns: auto minmax(50px, 100px);
+	row-gap: 0.1875rem;
+	column-gap: 0.5rem;
+	align-items: center;
+
+	min-width: min-content;
+}
+
+.form label {
+	font-size: 0.875rem;;
+}
+
+.form input {
+	text-align: right;
+}
+
+.form input:focus {
+	outline: none;
+}
+
+.footer {
+	display: grid;
+	align-items: stretch;
+	gap: 0.25rem;
+	grid-template-columns: auto 1fr 1fr;
+}
+
+.button  {
+	position: relative;
+	padding: 0.125rem 0.1875rem;
+
+	color: black;
+	background-color: var(--background-color);
+	border: 1.5px outset var(--border-color);
+
+	display: flex;
+	place-content: center;
+
+	&.primary {
+		outline: 1px inset black;
+		outline-offset: 0px;
+	}
+
+	&:focus {
+		outline: 1px dashed black;
+		outline-offset: 0px;
+	}
+}
+

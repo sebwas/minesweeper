@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './components/App/App.tsx'
 
+import './assets/levi-windows-font/stylesheet.css'
 import './index.css'
 import 'reset-css';
 
