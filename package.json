@@ -1,7 +1,7 @@
 {
   "name": "minesweeper",
   "private": true,
-  "version": "1.0.4",
+  "version": "1.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -34,6 +34,8 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "happy-dom": "^10.11.1",
+    "lightningcss": "^1.21.7",
+    "postcss-nesting": "^12.0.1",
     "typescript": "^5.2.2",
     "vite": "^4.4.9",
     "vite-plugin-pwa": "^0.16.4",
