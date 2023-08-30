@@ -1,10 +1,8 @@
-import { afterEach, describe, expect, it, test } from 'vitest'
+import { describe, expect, it, test } from 'vitest'
 
 import Field from '../../src/components/GameGrid/Field'
-import { act, cleanup, fireEvent, getGameControl, render, userEvent } from '../utils/render'
+import { act, fireEvent, getGameControl, render, userEvent } from '../utils/render'
 import { GameStatus } from '../../src/components/GameProvider'
-
-afterEach(() => cleanup())
 
 describe('The <Field /> component', () => {
 	describe('on click', () => {
