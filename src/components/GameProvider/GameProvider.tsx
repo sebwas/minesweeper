@@ -1,8 +1,10 @@
 import React, { PropsWithChildren } from 'react'
 
-import { createEmptyGrid, createGameGrids, fromSaveState, handleClick, toSaveState } from '../../lib/game'
+import { createEmptyGrid, createGameGrids, handleClick } from '../../lib/game'
 
 import useDifficulties from '../../hooks/use-difficulties'
+import useGameSaving from '../../hooks/use-game-saving'
+
 import { reduceToSum } from '../../lib/arrays'
 import { useFireworks } from '../Fireworks'
 import { FieldIsFlaggedField, FieldIsMineField, FieldIsNotCovered } from '../../lib/errors'
@@ -35,10 +37,6 @@ export function useGameState() {
 	return React.useContext(GameContext) as ProvidedContext
 }
 
-// The local storage key to save and retrieve the difficulty the player set.
-const SAVED_DIFFICULTY_STORAGE_KEY = 'minesweeper-difficulty'
-const SAVED_GAME = 'minesweeper-savegame'
-
 export default function GameProvider({ children }: PropsWithChildren) {
 	/**
 	 * Initialize and return an empty set of grids that can be used to render
@@ -55,24 +53,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
 		}
 	}
 
-	const [difficulties, setCustomDifficulty] = useDifficulties()
-
-	const [difficulty, setDifficulty] = React.useState<keyof typeof difficulties>(
-		() => {
-			const savedDifficulty = localStorage.getItem(SAVED_DIFFICULTY_STORAGE_KEY)
-
-			if (!savedDifficulty || !Object.keys(difficulties).includes(savedDifficulty)) {
-				return Object.keys(difficulties)[0] as keyof typeof difficulties
-			}
-
-			return savedDifficulty as keyof typeof difficulties
-		}
-	)
-
-	// Save the difficulty in local storage.
-	React.useEffect(() => {
-		localStorage.setItem(SAVED_DIFFICULTY_STORAGE_KEY, difficulty)
-	}, [difficulty])
+	const [difficulties, setCustomDifficulty, difficulty, setDifficulty] = useDifficulties()
 
 	const [grids, setGrids] = React.useState(
 		() => initializeEmptyGrids(difficulties[difficulty].dimensions)
@@ -113,45 +94,7 @@ export default function GameProvider({ children }: PropsWithChildren) {
 		}
 	}, [status, startFireworks])
 
-	// Load the saved playfield.
-	React.useEffect(() => {
-		const savedData = localStorage.getItem(SAVED_GAME)?.split('.')
-
-		if (!savedData?.length) {
-			return
-		}
-
-		let saveGame = null
-
-		try {
-			saveGame = fromSaveState(savedData.at(1) ?? '')
-		} catch {
-			console.error('Could not load save state.')
-		}
-
-		if (saveGame) {
-			setGrids(saveGame)
-			setStatus(GameStatus.running)
-			setTimeElapsed(Number(savedData.at(0) ?? '0'))
-		}
-	}, [])
-
-	// Save the playfield when it changes.
-	React.useEffect(() => {
-		let gridsToSave: null | typeof grids = grids
-
-		if (status !== GameStatus.running) {
-			gridsToSave = null
-		}
-
-		const saveState = toSaveState(gridsToSave)
-
-		if (saveState) {
-			localStorage.setItem(SAVED_GAME, `${timeElapsed}.${saveState}`)
-		} else {
-			localStorage.setItem(SAVED_GAME, '')
-		}
-	}, [status, grids, timeElapsed])
+	useGameSaving([grids, setGrids], [status, setStatus], [timeElapsed, setTimeElapsed])
 
 	/**
 	 * Handle a click at a given set of coordinates. If the playfield does not
