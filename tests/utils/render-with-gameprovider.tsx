@@ -4,11 +4,13 @@ import { afterEach } from 'vitest'
 
 import GameProvider, { useGameState } from '../../src/components/GameProvider'
 
+const gameControl: { control: null | ReturnType<typeof useGameState> } = { control: null }
+
 afterEach(() => {
 	cleanup()
-})
 
-const gameControl: { control: null | ReturnType<typeof useGameState> } = { control: null }
+	gameControl.control = null
+})
 
 export function getGameControl() {
 	if (!gameControl.control) {

@@ -46,7 +46,7 @@ export default function Field({x, y, ...delegated}: {x: number, y: number}) {
 	}
 
 	if (!cover[y][x]) {
-		return <UncoveredField count={mineCount[y][x]} />
+		return <UncoveredField count={mineCount[y][x]} handleClick={handleClick} />
 	}
 
 	return <CoveredField handleClick={handleClick} {...delegated} />
@@ -89,9 +89,12 @@ function FlaggedField({ handleClick }: { handleClick: ClickHandlerFunction }) {
 	)
 }
 
-function UncoveredField({ count }: { count: number }) {
+function UncoveredField({ handleClick, count }: { count: number, handleClick: ClickHandlerFunction }) {
 	return (
-		<button className={`${styles.field} ${styles.uncovered} ${styles[`count-${count}`]}`}>
+		<button
+			className={`${styles.field} ${styles.uncovered} ${styles[`count-${count}`]}`}
+			onClick={e => handleClick(e, false, false)}
+		>
 			{count || ''}
 		</button>
 	)

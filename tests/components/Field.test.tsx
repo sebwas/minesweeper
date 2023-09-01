@@ -1,7 +1,7 @@
 import { describe, expect, it, test } from 'vitest'
 
 import Field from '../../src/components/GameGrid/Field'
-import { act, fireEvent, getGameControl, render, userEvent } from '../utils/render'
+import { act, fireEvent, getGameControl, render, userEvent } from '../utils/render-with-gameprovider'
 import { GameStatus } from '../../src/components/GameProvider'
 
 describe('The <Field /> component', () => {
@@ -318,6 +318,54 @@ describe('The <Field /> component', () => {
 			await userEvent.pointer([{ target: getByText('covered') }, {target: getByText('covered'), keys: '[MouseLeft]'}])
 
 			expect(gameControl.control.status).toBe(GameStatus.lose)
+		})
+
+		it('uncovers a all surrounding covered unflagged fields when it\'s uncovered', () => {
+			const gameControl = getGameControl()
+
+			const { getByText } = render(<Field x={1} y={1} />)
+
+			act(() => {
+				// @ts-expect-error This is an API only available during tests.
+				gameControl.control.setStatus(GameStatus.running)
+
+				// @ts-expect-error This is an API only available during tests.
+				gameControl.control.setGrids({
+					mine: [
+						[1, 0, 0],
+						[0, 0, 0],
+						[1, 0, 0],
+					],
+
+					flag: [
+						[1, 0, 0],
+						[0, 0, 0],
+						[1, 0, 0],
+					],
+
+					mineCount: [
+						[9, 1, 0],
+						[2, 2, 0],
+						[9, 1, 0],
+					],
+
+					cover: [
+						[1, 0, 0],
+						[1, 0, 0],
+						[1, 0, 0],
+					],
+				})
+			})
+
+			expect(getByText('2')).toBeTruthy()
+
+			fireEvent.click(getByText('2'))
+
+			expect(gameControl.control.cover).toStrictEqual([
+				[1, 0, 0],
+				[0, 0, 0],
+				[1, 0, 0],
+			])
 		})
 	})
 })

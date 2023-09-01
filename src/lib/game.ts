@@ -333,11 +333,34 @@ export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: 
 		throw new FieldIsMineField()
 	} else if (newGrids.mineCount[y][x] === 0) {
 		newGrids.cover = expandFieldsToUncover(newGrids, { x, y })
-	} else {
+	} else if (newGrids.cover[y][x] === 1) {
 		newGrids.cover[y][x] = 0
+	} else {
+		newGrids.cover = uncoverSurroundingCoveredFields(newGrids, { x, y });
 	}
 
 	return newGrids
+}
+
+function uncoverSurroundingCoveredFields(grids: GameGrids, click: Coordinates) {
+	const dimensions: GridDimensions = { width: grids.cover[0]?.length ?? 0, height: grids.cover.length ?? 0 }
+	const coordinates = getSparePerimeterCoordinates(click, 1, dimensions)
+
+	const cover = copyGrid(grids.cover)
+
+	coordinates.forEach(({ x, y }) => {
+		if (grids.flag[y][x]) {
+			return
+		}
+
+		if (grids.mine[y][x]) {
+			throw new FieldIsMineField()
+		}
+
+		cover[y][x] = 0
+	})
+
+	return cover
 }
 
 function convertGridToString(grid: MineGrid, gridWordBitSize = 1) {

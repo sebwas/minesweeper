@@ -885,6 +885,53 @@ describe('The handleClick function', () => {
 			() => handleClick(grids, { x: 0, y: 0 }, false)
 		).toThrow(FieldIsMineField)
 	})
+
+	it('uncovers all covered fields when the number of flags is correct', () => {
+		const grids: GameGrids = {
+			mine: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'0-0': 1,
+			}),
+			flag: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'0-0': 1,
+			}),
+			mineCount: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'1-1': 1,
+			}),
+			cover: insertValues(createEmptyGrid({ width: 3, height: 3 }, 1), {
+				'1-1': 0,
+			}),
+		}
+
+		const newGrids = handleClick(grids, { x: 1, y: 1 }, false)
+
+		expect(newGrids.cover).toStrictEqual([
+			[1, 0, 0],
+			[0, 0, 0],
+			[0, 0, 0],
+		])
+	})
+
+	it('uncovers all covered fields when the number of flags is correct, but there is a mine', () => {
+		const grids: GameGrids = {
+			mine: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'0-0': 1,
+			}),
+			flag: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'0-2': 1,
+			}),
+			mineCount: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'1-1': 1,
+			}),
+			cover: insertValues(createEmptyGrid({ width: 3, height: 3 }, 1), {
+				'1-1': 0,
+			}),
+		}
+
+
+		expect(
+			() => handleClick(grids, { x: 1, y: 1 }, false)
+		).toThrow(FieldIsMineField)
+	})
 })
 
 describe('The game save feature', () => {
@@ -897,12 +944,12 @@ describe('The game save feature', () => {
 			expect(atob(saveState))
 		})
 
-		it('has 6 segments each separated by a dot', () => {
+		it('has 5 segments each separated by a dot (version, dimensions, mine, flags, cover)', () => {
 			const grids = createGameGrids({ width: 5, height: 5 }, 16, { x: 2, y: 2 })
 
 			const saveState = toSaveState(grids)
 
-			expect(atob(saveState).split('.')).toHaveLength(6)
+			expect(atob(saveState).split('.')).toHaveLength(5)
 		})
 
 		it('has the save version number as the first segment', () => {
@@ -933,7 +980,6 @@ describe('The game save feature', () => {
 			expect(atob(decodedAndSplitSaveState.at(2) as string)).toBeTypeOf('string')
 			expect(atob(decodedAndSplitSaveState.at(3) as string)).toBeTypeOf('string')
 			expect(atob(decodedAndSplitSaveState.at(4) as string)).toBeTypeOf('string')
-			expect(atob(decodedAndSplitSaveState.at(5) as string)).toBeTypeOf('string')
 		})
 
 		it('saves the mine field correctly', () => {
