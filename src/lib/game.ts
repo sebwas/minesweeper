@@ -348,17 +348,30 @@ function uncoverSurroundingCoveredFields(grids: GameGrids, click: Coordinates) {
 
 	const cover = copyGrid(grids.cover)
 
+	let flagCount = 0
+	let hasMine = false
+
 	coordinates.forEach(({ x, y }) => {
 		if (grids.flag[y][x]) {
+			flagCount++
+
 			return
 		}
 
 		if (grids.mine[y][x]) {
-			throw new FieldIsMineField()
+			hasMine = true
 		}
 
 		cover[y][x] = 0
 	})
+
+	if (flagCount !== grids.mineCount[click.y][click.x]) {
+		return copyGrid(grids.cover)
+	}
+
+	if (hasMine) {
+		throw new FieldIsMineField()
+	}
 
 	return cover
 }

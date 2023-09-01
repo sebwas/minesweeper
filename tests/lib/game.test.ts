@@ -886,7 +886,7 @@ describe('The handleClick function', () => {
 		).toThrow(FieldIsMineField)
 	})
 
-	it('uncovers all covered fields when the number of flags is correct', () => {
+	it('uncovers all covered fields when the user clicks on an uncovered field', () => {
 		const grids: GameGrids = {
 			mine: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
 				'0-0': 1,
@@ -908,6 +908,32 @@ describe('The handleClick function', () => {
 			[1, 0, 0],
 			[0, 0, 0],
 			[0, 0, 0],
+		])
+	})
+
+	it('uncovers all covered fields only when the number of flags is correct', () => {
+		const grids: GameGrids = {
+			mine: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'0-0': 1,
+			}),
+			flag: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'0-0': 1,
+				'0-1': 1,
+			}),
+			mineCount: insertValues(createEmptyGrid({ width: 3, height: 3 }), {
+				'1-1': 1,
+			}),
+			cover: insertValues(createEmptyGrid({ width: 3, height: 3 }, 1), {
+				'1-1': 0,
+			}),
+		}
+
+		const newGrids = handleClick(grids, { x: 1, y: 1 }, false)
+
+		expect(newGrids.cover).toStrictEqual([
+			[1, 1, 1],
+			[1, 0, 1],
+			[1, 1, 1],
 		])
 	})
 
