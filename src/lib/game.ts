@@ -17,15 +17,23 @@ export function createEmptyGrid<T extends number>(dimensions: GridDimensions, in
 		)
 }
 
+export function getGridDimensions(grid: MineGrid): GridDimensions {
+	return {
+		width: grid[0]?.length ?? 0,
+		height: grid.length ?? 0
+	}
+}
+
 /**
- * CAUTION: IMPURE.
- * Impure function to update the count of surrounding mines around the coordinates.
+ * Pure function to update the count of surrounding mines around the coordinates.
  */
 function updateSurroundingMineCounts(
 	grid: GameGrids['mineCount'],
 	coordinates: Coordinates
 ) {
-	const [height, width] = [grid.length, grid[0]?.length || 0]
+	grid = copyGrid(grid)
+
+	const { height, width } = getGridDimensions(grid)
 
 	const [fromX, toX] = [min0(coordinates.x - 1), limit(coordinates.x + 1, width - 1)]
 	const [fromY, toY] = [min0(coordinates.y - 1), limit(coordinates.y + 1, height - 1)]
@@ -40,6 +48,8 @@ function updateSurroundingMineCounts(
 			grid[y][x] = Math.min(9, grid[y][x] + 1) as 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 		}
 	}
+
+	return grid
 }
 
 function isInSparePerimeter(
@@ -115,7 +125,7 @@ export function createGameGrids(
 	const flagGrid = createEmptyGrid<0 | 1>(dimensions)
 
 	// 9 is a special value used for mine fields.
-	const mineCountGrid = createEmptyGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>(dimensions)
+	let mineCountGrid = createEmptyGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>(dimensions)
 
 	const chanceOfPlacing = numberOfMines / (dimensions.width * dimensions.height)
 
@@ -140,7 +150,7 @@ export function createGameGrids(
 				if (randomValue <= chanceOfPlacing) {
 					mineGrid[y][x] = 1
 					mineCountGrid[y][x] = 9
-					updateSurroundingMineCounts(mineCountGrid, { x, y })
+					mineCountGrid = updateSurroundingMineCounts(mineCountGrid, { x, y })
 					minesLeftToPlace--
 				}
 
@@ -336,7 +346,7 @@ function convertGridToString(grid: MineGrid, gridWordBitSize = 1) {
 		for (let i = 0; i < 8; i += gridWordBitSize) {
 			currentWord <<= gridWordBitSize
 
-			const entry = flattenedGrid.shift() as number
+			const entry = flattenedGrid.shift()
 
 			if (typeof entry !== 'undefined') {
 				currentWord |= entry
@@ -385,25 +395,15 @@ export function toSaveState<T extends null | GameGrids, R = T extends null ? nul
 		mine: convertGridToString(grids.mine),
 		flag: convertGridToString(grids.flag),
 		cover: convertGridToString(grids.cover),
-		mineCount: convertGridToString(grids.mineCount, 4),
 	}).join('.')
 
 	return btoa(`${SAVE_STATE_VERSION}.${dimensions}.${compressedGrids}`) as R
 }
 
 function extractSaveData(saveState: string) {
-	const [
-		version,
-		size,
-		...grids
-	] = atob(saveState).split('.')
+	const [ version, size, ...grids ] = atob(saveState).split('.')
 
-	const [
-		mine,
-		flag,
-		cover,
-		mineCount
-	] = grids
+	const [ mine, flag, cover ] = grids
 
 	const dimensions = {
 		width: Number(size.split('x').at(0)),
@@ -416,8 +416,24 @@ function extractSaveData(saveState: string) {
 		mine,
 		flag,
 		cover,
-		mineCount,
 	}
+}
+
+function createMineCountGrid(mineGrid: MineGrid) {
+	// Create empty mine grid.
+	let mineCount = createEmptyGrid<0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>(getGridDimensions(mineGrid))
+
+	mineGrid.forEach((_, y) => {
+		mineGrid[y].forEach((_, x) => {
+			if (mineGrid[y][x]) {
+				mineCount[y][x] = 9
+
+				mineCount = updateSurroundingMineCounts(mineCount, { x, y })
+			}
+		})
+	})
+
+	return mineCount
 }
 
 export function fromSaveState(saveState: null | string): null | GameGrids {
@@ -428,12 +444,13 @@ export function fromSaveState(saveState: null | string): null | GameGrids {
 	try {
 		const saveData = extractSaveData(saveState)
 
-		const [mine, flag, cover, mineCount] = [
+		const [mine, flag, cover] = [
 			convertStringToGrid(saveData.mine, saveData.dimensions),
 			convertStringToGrid(saveData.flag, saveData.dimensions),
 			convertStringToGrid(saveData.cover, saveData.dimensions),
-			convertStringToGrid(saveData.mineCount, saveData.dimensions, 4),
 		]
+
+		const mineCount = createMineCountGrid(mine)
 
 		return { mine, flag, cover, mineCount }
 	} catch (e) {
