@@ -3,12 +3,13 @@ import React from 'react'
 import { useGameState } from '../GameProvider'
 import Field from './Field'
 import InnerScrollShadow from '../InnerScrollShadow'
+import { getGridDimensions } from '../../lib/game'
 
 import styles from './GameGrid.module.css'
 
 export default function GameGrid() {
 	const { cover } = useGameState()
-	const [width, height] = [cover[0].length, cover.length]
+	const { width, height } = getGridDimensions(cover)
 
 	const grid = React.useRef<HTMLDivElement>(null)
 

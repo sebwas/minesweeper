@@ -185,12 +185,14 @@ function getListOfFieldsToUncover(
 		{ x: field.x + 1, y: field.y + 1 },
 	]
 
+	const { height, width } = getGridDimensions(mineCountGrid)
+
 	fieldsToTry.forEach(field => {
 		if (
 			field.x < 0
 			|| field.y < 0
-			|| field.x >= mineCountGrid[0].length
-			|| field.y >= mineCountGrid.length
+			|| field.x >= width
+			|| field.y >= height
 		) {
 			return
 		}
@@ -231,13 +233,16 @@ function gridsAreValid(grids: GameGrids) {
 		return GameError.gridsAreMissing()
 	}
 
-	const dimensions: GridDimensions = { width: grids.mine[0]?.length || 0, height: grids.mine.length }
+	const mineDimensions = getGridDimensions(grids.mine)
+	const flagDimensions = getGridDimensions(grids.flag)
+	const mineCountDimensions = getGridDimensions(grids.mineCount)
+	const coverDimensions = getGridDimensions(grids.cover)
 
 	if (
-		!(dimensions.width && dimensions.height)
-		|| !(grids.cover.length === dimensions.height && (grids.cover[0]?.length || 0) === dimensions.width)
-		|| !(grids.mineCount.length === dimensions.height && (grids.mineCount[0]?.length || 0) === dimensions.width)
-		|| !(grids.flag.length === dimensions.height && (grids.flag[0]?.length || 0) === dimensions.width)
+		!(mineDimensions.height && mineDimensions.height)
+		|| !(mineDimensions.height === flagDimensions.height && mineDimensions.width === flagDimensions.width)
+		|| !(flagDimensions.height === mineCountDimensions.height && flagDimensions.width === mineCountDimensions.width)
+		|| !(mineCountDimensions.height === coverDimensions.height && mineCountDimensions.width === coverDimensions.width)
 	) {
 		return GameError.dimensionMismatch()
 	}
