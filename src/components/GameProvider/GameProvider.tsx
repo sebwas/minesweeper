@@ -101,6 +101,10 @@ export default function GameProvider({ children }: PropsWithChildren) {
 	 * yet exist, create it.
 	 */
 	function handleGridClick(clickCoordinates: Coordinates, isRightClick = false, skipValidityCheck = false) {
+		if (isRightClick && status !== GameStatus.running) {
+			return
+		}
+
 		const currentGrids = status === GameStatus.running
 			? grids
 			: startGame(clickCoordinates)
