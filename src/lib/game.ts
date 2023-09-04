@@ -367,7 +367,7 @@ function uncoverSurroundingCoveredFields(grids: GameGrids, click: Coordinates) {
 		cover[y][x] = 0
 
 		if (grids.mineCount[y][x] === 0) {
-			cover = expandFieldsToUncover(grids, { x, y })
+			cover = expandFieldsToUncover({...grids, cover}, { x, y })
 		}
 	})
 
