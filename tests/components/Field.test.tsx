@@ -368,4 +368,80 @@ describe('The <Field /> component', () => {
 			])
 		})
 	})
+
+	it('starts the game with a left click', () => {
+		const gameControl = getGameControl()
+
+		const { getByText } = render(<Field x={1} y={1} />)
+
+		act(() => {
+			gameControl.control.setCustomDifficulty({
+				width: 5,
+				height: 5,
+				mines: 15
+			})
+
+			gameControl.control.setDifficulty('custom')
+
+			gameControl.control.restart()
+		})
+
+		expect(gameControl.control.status).toBe(GameStatus.idle)
+
+		expect(getByText('covered')).toBeTruthy()
+
+		fireEvent.click(getByText('covered'))
+
+		expect(gameControl.control.cover).toStrictEqual([
+			[0, 0, 0, 1, 1],
+			[0, 0, 0, 1, 1],
+			[0, 0, 0, 1, 1],
+			[1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1],
+		])
+	})
+
+	it('starts the game ONLY with a left click', async () => {
+		const gameControl = getGameControl()
+
+		const { getByText } = render(<Field x={1} y={1} />)
+
+		act(() => {
+			gameControl.control.setCustomDifficulty({
+				width: 5,
+				height: 5,
+				mines: 15
+			})
+
+			gameControl.control.setDifficulty('custom')
+
+			gameControl.control.restart()
+		})
+
+		expect(gameControl.control.status).toBe(GameStatus.idle)
+
+		expect(getByText('covered')).toBeTruthy()
+
+		await userEvent.pointer([{target: getByText('covered')}])
+		await userEvent.pointer([{keys: '[MouseRight]', target: getByText('covered')}])
+
+		expect(gameControl.control.cover).toStrictEqual([
+			[1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1],
+		])
+
+
+		await userEvent.pointer([{keys: '[MouseLeft]', target: getByText('covered')}])
+
+		expect(gameControl.control.cover).toStrictEqual([
+			[0, 0, 0, 1, 1],
+			[0, 0, 0, 1, 1],
+			[0, 0, 0, 1, 1],
+			[1, 1, 1, 1, 1],
+			[1, 1, 1, 1, 1],
+		])
+	})
 })
