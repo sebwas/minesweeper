@@ -290,7 +290,9 @@ function expandFieldsToUncover(grids: GameGrids, initial: Coordinates) {
 	fields.forEach(coordinates => {
 		const [x, y] = coordinates.split('-').map(i => parseInt(i, 10))
 
-		cover[y][x] = 0
+		if (!grids.flag[y][x]) {
+			cover[y][x] = 0
+		}
 	})
 
 	return cover
@@ -343,10 +345,10 @@ export function handleClick(grids: GameGrids, click: Coordinates, isRightClick: 
 }
 
 function uncoverSurroundingCoveredFields(grids: GameGrids, click: Coordinates) {
-	const dimensions: GridDimensions = { width: grids.cover[0]?.length ?? 0, height: grids.cover.length ?? 0 }
+	const dimensions: GridDimensions = getGridDimensions(grids.cover)
 	const coordinates = getSparePerimeterCoordinates(click, 1, dimensions)
 
-	const cover = copyGrid(grids.cover)
+	let cover = copyGrid(grids.cover)
 
 	let flagCount = 0
 	let hasMine = false
@@ -363,6 +365,10 @@ function uncoverSurroundingCoveredFields(grids: GameGrids, click: Coordinates) {
 		}
 
 		cover[y][x] = 0
+
+		if (grids.mineCount[y][x] === 0) {
+			cover = expandFieldsToUncover(grids, { x, y })
+		}
 	})
 
 	if (flagCount !== grids.mineCount[click.y][click.x]) {

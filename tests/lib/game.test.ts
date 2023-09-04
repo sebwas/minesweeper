@@ -515,7 +515,7 @@ describe('The handleClick function', () => {
 
 	function insertValues<T extends number>(grid: MineGrid<T>, values: Record<`${number}-${number}`, T>) {
 		return Object.entries(values).reduce((grid, [position, value]) => {
-			const [x, y] = [
+			const [y, x] = [
 				Number(position.split('-').at(0)),
 				Number(position.split('-').at(1)),
 			]
@@ -957,6 +957,38 @@ describe('The handleClick function', () => {
 		expect(
 			() => handleClick(grids, { x: 1, y: 1 }, false)
 		).toThrow(FieldIsMineField)
+	})
+
+	it('uncovers all covered fields and expands empty ones', () => {
+		const grids: GameGrids = {
+			mine: insertValues(createEmptyGrid({ width: 5, height: 5 }), {
+				'0-0': 1,
+				'0-1': 1,
+			}),
+			flag: insertValues(createEmptyGrid({ width: 5, height: 5 }), {
+				'0-0': 1,
+				'0-1': 1,
+			}),
+			mineCount: insertValues(createEmptyGrid({ width: 5, height: 5 }), {
+				'1-0': 2,
+				'1-1': 2,
+				'2-0': 1,
+				'2-1': 1,
+			}),
+			cover: insertValues(createEmptyGrid({ width: 5, height: 5 }, 1), {
+				'1-1': 0,
+			}),
+		}
+
+		const newGrids = handleClick(grids, { x: 1, y: 1 }, false)
+
+		expect(newGrids.cover).toStrictEqual([
+			[1, 1, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0],
+		])
 	})
 })
 
