@@ -351,7 +351,7 @@ describe('The <Field /> component', () => {
 
 					cover: [
 						[1, 0, 0],
-						[1, 0, 0],
+						[0, 0, 0],
 						[1, 0, 0],
 					],
 				})
