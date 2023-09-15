@@ -1,5 +1,6 @@
 import { GameStatus, useGameState } from "../GameProvider"
 import SevenSegmentNumberDisplay from "./SevenSegmentNumberDisplay"
+import VisuallyHidden from "../VisuallyHidden"
 
 import FaceSmile from '../../assets/icons/face-smile-duotone.svg'
 import FaceTired from '../../assets/icons/face-tired-duotone.svg'
@@ -24,7 +25,11 @@ export default function GameHeader() {
 				onClick={restart}
 				className={styles.button}
 			>
-				<img src={icon} />
+				<img src={icon} alt={getButtonLabel(status)} />
+
+				<VisuallyHidden>
+					Restart game
+				</VisuallyHidden>
 			</button>
 
 			<SevenSegmentNumberDisplay
@@ -44,5 +49,16 @@ function getSmileyFace(status: GameStatus) {
 			return FaceWink
 		default:
 			return FaceSmile
+	}
+}
+
+function getButtonLabel(status: GameStatus) {
+	switch (status) {
+		case GameStatus.lose:
+			return 'You lost'
+		case GameStatus.win:
+			return 'You won'
+		default:
+			return 'You are currently playing'
 	}
 }
