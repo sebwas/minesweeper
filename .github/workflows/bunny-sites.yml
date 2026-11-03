@@ -1,0 +1,32 @@
+name: Deploy site
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Production deploys serialize across every ref; cancelling mid-upload would leave a half-written deploy directory behind.
+concurrency:
+  group: bunny-sites
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write # records the deploy in the repo's Environments
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+
+      - uses: BunnyWay/actions/deploy-site@deploy-site_0.1.0
+        with:
+          site: "minesweeper"
+          directory: "dist"
+          api_key: ${{ secrets.BUNNYNET_API_KEY }}
