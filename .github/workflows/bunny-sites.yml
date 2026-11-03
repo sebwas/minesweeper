@@ -25,7 +25,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn run build
 
-      - uses: BunnyWay/actions/deploy-site@deploy-site_0.1.0
+      - uses: BunnyWay/actions/deploy-site@deploy-site_0.1.2
         with:
           site: "minesweeper"
           directory: "dist"
